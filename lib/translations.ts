@@ -72,7 +72,7 @@ export const translations = {
             done: "Done",
             title: "Settings",
             version: "Version",
-            versionValue: "v1.2.0"
+            versionValue: "v1.4.0"
         }
     },
     de: {
@@ -84,16 +84,16 @@ export const translations = {
             guideTitle: "Anleitung",
             guideDesc: "Lerne, wie du deinen Drucker ohne AMS für Multicolor einrichtest.",
             readGuide: "ANLEITUNG",
-            darkMode: "Design",
-            version: "v1.2.0 • Pure Client",
+            darkMode: "Dunkelmodus",
+            version: "v1.4.0 • A1 Mini Version",
             confirmNewProject: "Neues Projekt starten? Dein aktueller Fortschritt wird zurückgesetzt."
         },
         // Guide Overlay
         guide: {
             title: "Manueller Farbwechsel",
             subtitle: "Kein AMS? Kein Problem.",
-            heroTitle: "Multicolor entsperren.",
-            heroDesc: "Um manuellen Mehrfarbdruck auf deinem Bambu Lab A1 (ohne AMS) zu ermöglichen, musst du drei G-Code-Abschnitte in deinem Drucker-Preset ändern. Du kannst diese Änderungen in einem neuen Preset speichern.",
+            heroTitle: "Mehrfarbendruck möglich machen.",
+            heroDesc: "Um manuellen Mehrfarbdruck auf deinem Bambu Lab A1 (ohne AMS) zu ermöglichen, musst du drei G-Code-Abschnitte in deinem Drucker-Preset ändern. Danach kannst du auf einem Layer verschiedene Farben drucken.",
             step1Title: "Filamentwechsel G-Code",
             step1Desc: "Dieser Code sorgt dafür, dass der Drucker pausiert und die Temperatur hält. Ersetze den vorhandenen Block vollständig.",
             step2Title: "Maschinen Start G-Code",
@@ -115,10 +115,10 @@ export const translations = {
         home: {
             dashboard: "Übersicht",
             subtitleEmpty: "Verwalte deine Filamentwechsel effizient.",
-            subtitleStats: "{completed} von {total} Aufgaben erledigt",
+            subtitleStats: "{completed} von {total} Wechseln erledigt",
             resetAll: "Zurücksetzen",
-            confirmReset: "Alle Aufgaben zurücksetzen?",
-            smartParsing: "Intelligentes Parsen",
+            confirmReset: "Alle Wechsel zurücksetzen?",
+            smartParsing: "Intelligente G-Code Analyse",
             smartParsingDesc: "Erkennt Filamentwechsel in Bambu/Prusa G-Code automatisch.",
             progressTracking: "Fortschritt speichern",
             progressTrackingDesc: "Merk dir, wo du aufgehört hast, auch wenn du den Browser schließt.",

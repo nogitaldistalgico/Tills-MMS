@@ -279,6 +279,24 @@ M621 S255`}
                                 </div>
                             </section>
 
+                            {/* Final Step: How to Print */}
+                            <section className="relative group">
+                                <div className="absolute -left-4 top-0 bottom-0 w-[2px] bg-gray-200 dark:bg-white/5 md:block hidden" />
+                                <div className="space-y-6 md:pl-8">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-green-500/30 z-10 ring-4 ring-[#F5F5F7] dark:ring-black">
+                                            <Check size={16} strokeWidth={3} />
+                                        </div>
+                                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">{t.guide.finalStepTitle}</h3>
+                                    </div>
+                                    <div className="p-6 rounded-3xl bg-white dark:bg-[#1C1C1E] border border-gray-100 dark:border-white/5 shadow-sm">
+                                        <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed font-medium">
+                                            {t.guide.finalStepDesc}
+                                        </p>
+                                    </div>
+                                </div>
+                            </section>
+
                             {/* Pro Tip Box */}
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
