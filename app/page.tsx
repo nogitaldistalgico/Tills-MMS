@@ -98,14 +98,14 @@ export default function Home() {
     const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
 
     return (
-        <div className="min-h-full max-w-4xl mx-auto p-8 pb-32">
+        <div className="min-h-full max-w-5xl mx-auto p-6 md:p-12 pb-40">
             {/* Header */}
-            <header className="flex items-center justify-between mb-12">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight mb-2">
+            <header className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+                <div className="space-y-4">
+                    <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-600 to-gray-400 dark:from-white dark:via-gray-100 dark:to-gray-500 pb-2">
                         {job ? job.filename.replace(/\.gcode\.3mf$/i, '').replace(/\.gcode$/i, '').replace(/\.3mf$/i, '') : t.home.dashboard}
                     </h1>
-                    <p className="text-gray-500 dark:text-gray-400">
+                    <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 font-medium max-w-2xl leading-relaxed">
                         {job
                             ? t.home.subtitleStats.replace('{completed}', completedTasks.toString()).replace('{total}', totalTasks.toString())
                             : t.home.subtitleEmpty}
@@ -116,10 +116,10 @@ export default function Home() {
                     <div className="flex gap-4">
                         <button
                             onClick={handleReset}
-                            className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-white/10 rounded-full transition-all"
+                            className="group flex items-center justify-center p-3 text-gray-400 hover:text-blue-500 hover:bg-blue-50/50 dark:hover:bg-white/10 rounded-full transition-all backdrop-blur-md"
                             title={t.home.resetAll}
                         >
-                            <RefreshCcw size={20} />
+                            <RefreshCcw size={24} className="group-hover:rotate-180 transition-transform duration-500" />
                         </button>
                     </div>
                 )}
@@ -127,67 +127,75 @@ export default function Home() {
 
             {/* Progress Bar (Sticky) */}
             {job && (
-                <div className="sticky top-0 z-10 bg-bg-light/80 dark:bg-bg-dark/80 backdrop-blur-md py-4 mb-8 -mx-4 px-4 border-b border-gray-200/50 dark:border-white/5">
-                    <div className="h-2 bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
+                <div className="sticky top-0 z-30 bg-bg-light/80 dark:bg-bg-dark/80 backdrop-blur-xl py-6 mb-12 -mx-6 px-6 md:-mx-12 md:px-12 border-b border-gray-200/20 dark:border-white/5 transition-all">
+                    <div className="h-2.5 bg-gray-100 dark:bg-white/5 rounded-full overflow-hidden shadow-inner">
                         <motion.div
-                            className="h-full bg-blue-500"
+                            className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 shadow-[0_0_20px_rgba(59,130,246,0.5)]"
                             initial={{ width: 0 }}
                             animate={{ width: `${progress}%` }}
-                            transition={{ duration: 0.5 }}
+                            transition={{ duration: 0.5, ease: "circOut" }}
                         />
                     </div>
                 </div>
             )}
 
             {/* Main Content */}
-            <div className="space-y-6">
+            <div className="space-y-8">
                 {!job ? (
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
+                        className="space-y-16"
                     >
-                        <FileUpload onFileSelect={handleFileSelect} isProcessing={isProcessing} />
+                        <div className="relative z-10">
+                            <FileUpload onFileSelect={handleFileSelect} isProcessing={isProcessing} />
+                        </div>
+
                         {error && (
-                            <div className="mt-4 p-4 bg-red-50 text-red-600 rounded-xl flex items-center gap-2">
+                            <div className="p-4 bg-red-50/50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20 text-red-600 dark:text-red-400 rounded-2xl flex items-center gap-3 backdrop-blur-md">
                                 <AlertCircle size={20} />
-                                {error}
+                                <span className="font-medium">{error}</span>
                             </div>
                         )}
 
-                        {/* Empty State / Hints */}
-                        <div className="mt-12 grid md:grid-cols-2 gap-6">
+                        {/* Empty State / Hints - High End Bento Grid */}
+                        <div className="grid md:grid-cols-2 gap-6">
                             <FeatureCard
                                 title={t.home.smartParsing}
                                 desc={t.home.smartParsingDesc}
                                 delay={0.1}
+                                gradient="from-violet-500/10 to-purple-500/10"
+                                border="border-violet-200/50 dark:border-violet-500/10"
                             />
                             <FeatureCard
                                 title={t.home.progressTracking}
                                 desc={t.home.progressTrackingDesc}
                                 delay={0.2}
+                                gradient="from-blue-500/10 to-cyan-500/10"
+                                border="border-blue-200/50 dark:border-blue-500/10"
                             />
                         </div>
 
                         {/* Footer / Disclaimer */}
-                        <div className="mt-16 pt-8 border-t border-gray-200/50 dark:border-white/5 text-center px-4 mb-8">
-                            <h4 className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">
+                        <div className="pt-12 text-center px-4">
+                            <h4 className="text-xs font-bold text-gray-300 dark:text-gray-600 uppercase tracking-[0.2em] mb-3">
                                 {t.home.about}
                             </h4>
-                            <p className="text-[11px] text-gray-400 dark:text-gray-600 max-w-lg mx-auto leading-relaxed">
+                            <p className="text-[11px] text-gray-400 dark:text-gray-500 max-w-lg mx-auto leading-relaxed opacity-70">
                                 {t.home.disclaimerText}
                             </p>
                             <a
                                 href="https://github.com/nogitaldistalgico/Tills-MMS"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-block mt-3 text-[11px] font-medium text-blue-500/80 hover:text-blue-600 transition-colors"
+                                className="inline-block mt-4 text-[11px] font-semibold text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-white transition-colors"
                             >
                                 {t.home.githubContact}
                             </a>
                         </div>
                     </motion.div>
                 ) : (
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                         <AnimatePresence>
                             {job.tasks.map((task, idx) => (
                                 <TaskRow
@@ -201,18 +209,18 @@ export default function Home() {
 
                         {completedTasks === totalTasks && totalTasks > 0 && (
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
+                                initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                className="mt-12 p-8 bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-900/20 rounded-2xl text-center"
+                                className="mt-16 p-10 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 border border-green-100 dark:border-green-900/20 rounded-[2rem] text-center backdrop-blur-xl"
                             >
-                                <div className="w-16 h-16 bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-300 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <CheckCircle size={32} />
+                                <div className="w-20 h-20 bg-white dark:bg-white/5 text-green-500 dark:text-green-400 rounded-full shadow-xl shadow-green-500/10 flex items-center justify-center mx-auto mb-6">
+                                    <CheckCircle size={40} className="stroke-[2.5]" />
                                 </div>
-                                <h2 className="text-2xl font-bold text-green-800 dark:text-green-200 mb-2">{t.home.printComplete}</h2>
-                                <p className="text-green-600 dark:text-green-400">{t.home.printCompleteDesc}</p>
+                                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight">{t.home.printComplete}</h2>
+                                <p className="text-lg text-gray-500 dark:text-gray-400 font-medium">{t.home.printCompleteDesc}</p>
                                 <button
                                     onClick={() => setJob(null)}
-                                    className="mt-6 px-6 py-2 bg-green-600 text-white rounded-full font-medium hover:bg-green-700 transition"
+                                    className="mt-8 px-8 py-3 bg-gray-900 dark:bg-white text-white dark:text-black rounded-full font-bold shadow-lg hover:scale-105 hover:shadow-xl transition-all duration-300"
                                 >
                                     {t.home.startNewPrint}
                                 </button>
@@ -230,9 +238,9 @@ export default function Home() {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0 }}
                         onClick={scrollToTop}
-                        className="fixed bottom-36 right-6 w-12 h-12 bg-white/40 dark:bg-[#1c1c1e]/40 backdrop-blur-md shadow-xl rounded-full flex items-center justify-center text-gray-500 hover:text-blue-500 hover:scale-110 transition-all z-40 border border-gray-100 dark:border-white/10"
+                        className="fixed bottom-36 right-6 w-14 h-14 bg-white/20 dark:bg-black/20 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white hover:scale-110 transition-all z-40 border border-white/20 dark:border-white/10"
                     >
-                        <ArrowUp size={20} />
+                        <ArrowUp size={24} />
                     </motion.button>
                 )}
             </AnimatePresence>
@@ -240,14 +248,20 @@ export default function Home() {
     );
 }
 
-const FeatureCard = ({ title, desc, delay }: { title: string, desc: string, delay: number }) => (
+const FeatureCard = ({ title, desc, delay, gradient, border }: { title: string, desc: string, delay: number, gradient?: string, border?: string }) => (
     <motion.div
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay }}
-        className="p-6 bg-white dark:bg-[#2C2C2E] rounded-xl border border-gray-100 dark:border-white/5 shadow-sm"
+        transition={{ delay, duration: 0.6, ease: "easeOut" }}
+        className={cn(
+            "relative overflow-hidden p-8 rounded-[2rem] bg-white/40 dark:bg-white/5 backdrop-blur-xl border shadow-sm hover:shadow-xl transition-all duration-500 group",
+            border || "border-white/50 dark:border-white/10"
+        )}
     >
-        <h3 className="font-semibold text-lg mb-2">{title}</h3>
-        <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
+        <div className={cn("absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-gradient-to-br", gradient)} />
+        <div className="relative z-10">
+            <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white tracking-tight">{title}</h3>
+            <p className="text-gray-500 dark:text-gray-400 text-base leading-relaxed font-medium">{desc}</p>
+        </div>
     </motion.div>
 );
