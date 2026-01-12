@@ -36,47 +36,67 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, isProcessi
     }, []);
 
     return (
-        <div
+        <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "spring", duration: 0.6 }}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             className={cn(
-                "relative group cursor-pointer border-2 border-dashed rounded-2xl p-12 transition-all duration-300 flex flex-col items-center justify-center text-center",
+                "relative group cursor-pointer rounded-[2rem] p-16 transition-all duration-500 overflow-hidden",
                 isDragOver
-                    ? "border-blue-500 bg-blue-50/50 dark:bg-blue-900/10 scale-[1.02]"
-                    : "border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-[#2C2C2E]/50 hover:border-blue-400/50"
+                    ? "bg-blue-500/5 dark:bg-blue-500/10 scale-[1.02]"
+                    : "bg-white/80 dark:bg-[#1c1c1e]/60 hover:bg-white dark:hover:bg-[#1c1c1e] hover:shadow-2xl hover:shadow-black/5 dark:hover:shadow-black/20"
             )}
         >
+            {/* Animated Border Gradient */}
+            <div className={cn(
+                "absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none",
+                "bg-gradient-to-tr from-blue-500/10 via-purple-500/10 to-transparent"
+            )} />
+
+            <div className={cn(
+                "absolute inset-0 border-2 border-dashed rounded-[2rem] transition-colors duration-300",
+                isDragOver ? "border-blue-500/50" : "border-gray-200/60 dark:border-white/10 group-hover:border-blue-300/50 dark:group-hover:border-blue-700/30"
+            )} />
+
             <input
                 type="file"
                 accept=".gcode,.3mf"
-                className="absolute inset-0 opacity-0 cursor-pointer"
+                className="absolute inset-0 opacity-0 cursor-pointer z-20"
                 onChange={(e) => e.target.files && onFileSelect(e.target.files[0])}
                 disabled={isProcessing}
             />
 
-            <div className={cn(
-                "w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-colors",
-                isDragOver ? "bg-blue-100 text-blue-600" : "bg-gray-100 dark:bg-gray-800 text-gray-400 group-hover:text-blue-500 group-hover:bg-blue-50"
-            )}>
-                {isProcessing ? (
-                    <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                    >
-                        <FileType size={32} />
-                    </motion.div>
-                ) : (
-                    <Upload size={32} />
-                )}
-            </div>
+            <div className="relative z-10 flex flex-col items-center justify-center text-center space-y-6">
+                <div className={cn(
+                    "w-24 h-24 rounded-3xl flex items-center justify-center transition-all duration-500 shadow-xl",
+                    isDragOver
+                        ? "bg-blue-500 text-white scale-110 rotate-3"
+                        : "bg-gradient-to-br from-blue-500 to-cyan-400 text-white shadow-blue-500/20 group-hover:shadow-blue-500/40 group-hover:-translate-y-2"
+                )}>
+                    {isProcessing ? (
+                        <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+                        >
+                            <FileType size={42} strokeWidth={1.5} />
+                        </motion.div>
+                    ) : (
+                        <Upload size={42} strokeWidth={1.5} />
+                    )}
+                </div>
 
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                {isProcessing ? "Analyzing..." : "Drop Print File Here"}
-            </h3>
-            <p className="text-sm text-gray-500">
-                Supports .gcode and .3mf
-            </p>
-        </div>
+                <div className="space-y-2">
+                    <h3 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
+                        {isProcessing ? "Processing File..." : "Drop Print File Here"}
+                    </h3>
+                    <p className="text-lg text-gray-400 font-medium">
+                        or click to browse <span className="text-blue-500 dark:text-blue-400">.gcode</span> or <span className="text-blue-500 dark:text-blue-400">.3mf</span>
+                    </p>
+                </div>
+            </div>
+        </motion.div>
     );
 };
