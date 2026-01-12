@@ -15,23 +15,46 @@ export const Sidebar = () => {
     const [history, setHistory] = useState<HistoryItem[]>([]);
     const [showMobileHistory, setShowMobileHistory] = useState(false);
     const [showMobileSettings, setShowMobileSettings] = useState(false);
+    const [isDarkMode, setIsDarkMode] = useState(false);
 
     useEffect(() => {
-        // Load history on mount
+        // Load history
         const loadHistory = () => {
             try {
                 const hist = JSON.parse(localStorage.getItem('mms_history') || '[]');
                 setHistory(hist);
-            } catch (e) {
-                console.error(e);
-            }
+            } catch (e) { console.error(e); }
         };
-
         loadHistory();
-        // Listen for storage updates (from page.tsx)
         window.addEventListener('storage', loadHistory);
+
+        // Check Dark Mode
+        if (document.documentElement.classList.contains('dark')) {
+            setIsDarkMode(true);
+        }
+
         return () => window.removeEventListener('storage', loadHistory);
     }, []);
+
+    const toggleDarkMode = () => {
+        const html = document.documentElement;
+        if (html.classList.contains('dark')) {
+            html.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+            setIsDarkMode(false);
+        } else {
+            html.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+            setIsDarkMode(true);
+        }
+    };
+
+    const handleNewProject = () => {
+        if (confirm("Start a new project? This will reset your current progress.")) {
+            localStorage.removeItem('currentJob');
+            window.location.reload();
+        }
+    };
 
     const clearHistory = () => {
         if (confirm("Clear local history?")) {
@@ -55,7 +78,7 @@ export const Sidebar = () => {
                 </div>
 
                 <button
-                    onClick={() => window.location.reload()}
+                    onClick={handleNewProject}
                     className="w-full bg-blue-500 hover:bg-blue-600 active:scale-[0.98] transition-all text-white font-medium py-3 px-4 rounded-xl flex items-center justify-center gap-2 shadow-blue-500/20 shadow-lg mb-8"
                 >
                     <Plus size={20} className="stroke-[2.5]" />
@@ -92,19 +115,25 @@ export const Sidebar = () => {
                 </div>
 
                 <div className="mt-8 pt-6 border-t border-gray-200/50 dark:border-white/5">
-                    <NavItem icon={<Settings size={20} />} label="Settings" />
+                    <div className="px-3 py-2 flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-500">Dark Mode</span>
+                        <button onClick={toggleDarkMode} className="p-2 bg-gray-100 dark:bg-white/10 rounded-lg transition-colors">
+                            {isDarkMode ? <Moon size={16} /> : <Sun size={16} />}
+                        </button>
+                    </div>
                     <div className="text-xs text-center text-gray-400 mt-4">v1.1.0 • Pure Client</div>
                 </div>
             </aside>
 
 
-            {/* Mobile Overlays */}
+            {/* Mobile Overlays (History) */}
             <AnimatePresence>
                 {showMobileHistory && (
                     <motion.div
                         initial={{ opacity: 0, y: "100%" }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: "100%" }}
+                        transition={{ type: "spring", damping: 25, stiffness: 200 }}
                         className="md:hidden fixed inset-0 z-40 bg-white dark:bg-[#1c1c1e] p-6 pt-12 overflow-y-auto"
                     >
                         <div className="flex items-center justify-between mb-8">
@@ -136,25 +165,38 @@ export const Sidebar = () => {
                     </motion.div>
                 )}
 
+                {/* Mobile Overlays (Settings) */}
                 {showMobileSettings && (
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
-                        className="md:hidden fixed inset-0 z-40 flex items-center justify-center bg-black/50 backdrop-blur-sm p-6"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="md:hidden fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm p-6"
                         onClick={() => setShowMobileSettings(false)}
                     >
-                        <div className="bg-white dark:bg-[#1c1c1e] w-full max-w-sm rounded-[2rem] p-6 shadow-2xl" onClick={e => e.stopPropagation()}>
+                        <motion.div
+                            initial={{ scale: 0.9, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.9, y: 20 }}
+                            className="bg-white dark:bg-[#1c1c1e] w-full max-w-xs rounded-[2rem] p-6 shadow-2xl relative overflow-hidden"
+                            onClick={e => e.stopPropagation()}
+                        >
                             <h2 className="text-xl font-bold mb-6 text-center">Settings</h2>
 
-                            <div className="space-y-4">
-                                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-2xl">
+                            <div className="space-y-3">
+                                <button
+                                    onClick={toggleDarkMode}
+                                    className="w-full flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-2xl active:scale-95 transition-transform"
+                                >
                                     <div className="flex items-center gap-3">
-                                        <div className="p-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-lg"><Moon size={18} /></div>
+                                        <div className="p-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-lg">
+                                            {isDarkMode ? <Moon size={18} /> : <Sun size={18} />}
+                                        </div>
                                         <span className="font-medium">Dark Mode</span>
                                     </div>
-                                    <span className="text-xs text-gray-400">System</span>
-                                </div>
+                                    <span className="text-xs font-semibold text-blue-500">{isDarkMode ? 'ON' : 'OFF'}</span>
+                                </button>
+
                                 <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-2xl">
                                     <div className="flex items-center gap-3">
                                         <div className="p-2 bg-purple-100 dark:bg-purple-900/30 text-purple-600 rounded-lg"><Settings size={18} /></div>
@@ -164,38 +206,38 @@ export const Sidebar = () => {
                                 </div>
                             </div>
 
-                            <button onClick={() => setShowMobileSettings(false)} className="w-full mt-6 py-3 bg-blue-500 text-white rounded-xl font-medium">
-                                Close
+                            <button onClick={() => setShowMobileSettings(false)} className="w-full mt-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-xl font-bold">
+                                Done
                             </button>
-                        </div>
+                        </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
 
 
-            {/* "iOS 26" Floating Dock */}
-            <nav className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[85%] max-w-[340px] bg-white/70 dark:bg-[#1c1c1e]/70 backdrop-blur-2xl border border-white/40 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-[2.5rem] flex justify-between items-center px-6 py-3 z-50 transition-all duration-300">
+            {/* "iOS 26" Floating Dock - Refined */}
+            <nav className="md:hidden fixed bottom-8 left-1/2 -translate-x-1/2 w-[auto] min-w-[320px] bg-white/60 dark:bg-[#1c1c1e]/60 backdrop-blur-xl border border-white/20 dark:border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-[2.5rem] flex items-center justify-between px-2 pl-6 pr-6 py-2 z-50">
                 <button
                     onClick={() => setShowMobileHistory(true)}
-                    className="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-500 active:scale-95 transition-all w-16"
+                    className="group flex flex-col items-center justify-center w-14 h-14 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-all text-gray-500 dark:text-gray-400"
                 >
-                    <Clock size={22} className={showMobileHistory ? "text-blue-500 fill-current/10" : ""} />
+                    <Clock size={24} className="group-active:scale-90 transition-transform" />
                 </button>
 
-                <div className="relative -top-6">
+                <div className="relative -top-1 mx-4">
                     <button
-                        onClick={() => window.location.reload()}
-                        className="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-blue-500/30 hover:scale-105 active:scale-95 transition-all border-4 border-white dark:border-[#2C2C2E]"
+                        onClick={handleNewProject}
+                        className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-xl shadow-blue-500/40 hover:scale-105 active:scale-95 transition-all border-[4px] border-white/50 dark:border-[#2C2C2E]/50 backdrop-blur-md"
                     >
-                        <Plus size={26} className="stroke-[3]" />
+                        <Plus size={28} className="stroke-[3]" />
                     </button>
                 </div>
 
                 <button
                     onClick={() => setShowMobileSettings(true)}
-                    className="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-500 active:scale-95 transition-all w-16"
+                    className="group flex flex-col items-center justify-center w-14 h-14 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-all text-gray-500 dark:text-gray-400"
                 >
-                    <Settings size={22} className={showMobileSettings ? "text-blue-500 fill-current/10" : ""} />
+                    <Settings size={24} className="group-active:scale-90 transition-transform" />
                 </button>
             </nav>
         </>

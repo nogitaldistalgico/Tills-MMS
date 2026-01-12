@@ -65,6 +65,16 @@ export const TaskRow: React.FC<TaskRowProps> = ({ task, onToggle, index }) => {
                 <div className="text-sm text-gray-500 dark:text-gray-400">
                     {task.description}
                 </div>
+                <div className="flex flex-col items-end gap-1">
+                    <div className="text-sm font-medium text-gray-900 dark:text-gray-100 font-mono">
+                        Z: {task.z_height.toFixed(2)}mm
+                    </div>
+                    {task.layer_num !== undefined && (
+                        <div className="text-xs text-gray-400 font-mono">
+                            Layer {task.layer_num}
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Stats */}

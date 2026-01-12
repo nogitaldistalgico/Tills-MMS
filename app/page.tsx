@@ -101,7 +101,7 @@ export default function Home() {
             <header className="flex items-center justify-between mb-12">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight mb-2">
-                        {job ? job.filename : "Dashboard"}
+                        {job ? job.filename.replace(/\.gcode\.3mf$/i, '').replace(/\.gcode$/i, '').replace(/\.3mf$/i, '') : "Dashboard"}
                     </h1>
                     <p className="text-gray-500 dark:text-gray-400">
                         {job
@@ -202,7 +202,7 @@ export default function Home() {
                 )}
             </div>
 
-            {/* Floating Action Button (Scroll Top) */}
+            {/* Floating Action Button (Scroll Top) - Moved up to avoid dock */}
             <AnimatePresence>
                 {job && (
                     <motion.button
@@ -210,7 +210,7 @@ export default function Home() {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0 }}
                         onClick={scrollToTop}
-                        className="fixed bottom-8 right-8 w-12 h-12 bg-white dark:bg-gray-700 shadow-xl rounded-full flex items-center justify-center text-gray-500 hover:text-blue-500 hover:scale-110 transition-all z-50"
+                        className="fixed bottom-36 right-6 w-12 h-12 bg-white dark:bg-gray-700 shadow-xl rounded-full flex items-center justify-center text-gray-500 hover:text-blue-500 hover:scale-110 transition-all z-40 border border-gray-100 dark:border-white/10"
                     >
                         <ArrowUp size={20} />
                     </motion.button>

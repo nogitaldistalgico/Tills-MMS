@@ -16,6 +16,7 @@ export interface Task {
     z_height: number;
     progress_percent: number;
     is_completed: boolean;
+    layer_num?: number;
 }
 
 export interface PrintJob {
@@ -63,11 +64,23 @@ export const parseGcodeContent = (filename: string, content: string): PrintJob =
     }
 
     let current_z = 0.0;
+    let current_layer = 0;
     let last_tool = -1;
     let is_pseudo_start = true;
 
     lines.forEach((line, i) => {
         line = line.trim();
+
+        // Track Layer
+        // Prusa/Bambu often use "; LAYER x" or "; layer x"
+        if (line.startsWith("; LAYER") || line.startsWith("; layer")) {
+            const parts = line.split(" ");
+            if (parts.length > 1) {
+                try {
+                    current_layer = parseInt(parts[parts.length - 1]);
+                } catch (e) { }
+            }
+        }
 
         // Track Z
         if (line.startsWith("; Z:")) {
@@ -103,11 +116,6 @@ export const parseGcodeContent = (filename: string, content: string): PrintJob =
 
                     const progress = (i / total_lines) * 100;
 
-                    // Only add a visible task if it's a swap or the specific start?
-                    // We add all tool changes.
-
-                    // Optimization: Skip immediate duplicate T commands if they happen for some reason
-
                     const task: Task = {
                         id: `measured_${i}_${tool_idx}`,
                         tool_idx: tool_idx,
@@ -116,6 +124,7 @@ export const parseGcodeContent = (filename: string, content: string): PrintJob =
                         description: `Slot ${tool_idx + 1}`,
                         color: fil.color,
                         z_height: current_z,
+                        layer_num: current_layer, // Added field
                         progress_percent: parseFloat(progress.toFixed(1)),
                         is_completed: false
                     };
