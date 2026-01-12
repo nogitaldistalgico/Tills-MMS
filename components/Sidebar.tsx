@@ -1,4 +1,3 @@
-```tsx
 "use client";
 
 import React, { useEffect, useState } from 'react';
@@ -65,7 +64,7 @@ M109 S[new_filament_temp]; Set temp for NEW filament
             <aside className="hidden md:flex fixed left-0 top-0 h-full w-[280px] bg-white/60 dark:bg-[#1c1c1e]/60 border-r border-gray-200/50 dark:border-white/5 flex-col py-6 px-4 z-20 backdrop-blur-xl">
                 <div className="mb-8 px-2 flex items-center gap-3">
                     <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm shrink-0">
-                         <Image src="/logo.png" alt="Logo" fill className="object-cover" />
+                        <Image src="/logo.png" alt="Logo" fill className="object-cover" />
                     </div>
                     <div>
                         <h1 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white leading-none mb-1">{t.sidebar.title}</h1>
