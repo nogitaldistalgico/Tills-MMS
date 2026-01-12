@@ -238,7 +238,7 @@ export default function Home() {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0 }}
                         onClick={scrollToTop}
-                        className="fixed bottom-32 right-6 w-12 h-12 bg-white/60 dark:bg-[#1c1c1e]/60 backdrop-blur-md shadow-xl rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white hover:scale-110 transition-all z-40 border border-white/20 dark:border-white/10"
+                        className="fixed bottom-32 right-6 w-12 h-12 bg-white/20 dark:bg-black/20 backdrop-blur-2xl shadow-xl rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white hover:scale-110 transition-all z-40 border border-white/20 dark:border-white/10"
                     >
                         <ArrowUp size={20} />
                     </motion.button>
