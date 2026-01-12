@@ -1,39 +1,22 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { FolderOpen, Clock, FileText, Settings, Plus, RotateCcw, X, Moon, Sun } from 'lucide-react';
+import { Settings, Plus, X, Moon, Sun, BookOpen, Copy, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Shared type for History items
-interface HistoryItem {
-    filename: string;
-    date: string;
-}
-
 export const Sidebar = () => {
-    const [history, setHistory] = useState<HistoryItem[]>([]);
-    const [showMobileHistory, setShowMobileHistory] = useState(false);
+    // State
+    const [showGuide, setShowGuide] = useState(false);
     const [showMobileSettings, setShowMobileSettings] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(false);
+    const [copiedBlock, setCopiedBlock] = useState<string | null>(null);
 
     useEffect(() => {
-        // Load history
-        const loadHistory = () => {
-            try {
-                const hist = JSON.parse(localStorage.getItem('mms_history') || '[]');
-                setHistory(hist);
-            } catch (e) { console.error(e); }
-        };
-        loadHistory();
-        window.addEventListener('storage', loadHistory);
-
         // Check Dark Mode
         if (document.documentElement.classList.contains('dark')) {
             setIsDarkMode(true);
         }
-
-        return () => window.removeEventListener('storage', loadHistory);
     }, []);
 
     const toggleDarkMode = () => {
@@ -56,17 +39,25 @@ export const Sidebar = () => {
         }
     };
 
-    const clearHistory = () => {
-        if (confirm("Clear local history?")) {
-            localStorage.removeItem('mms_history');
-            setHistory([]);
-        }
+    const copyToClipboard = (text: string, blockId: string) => {
+        navigator.clipboard.writeText(text);
+        setCopiedBlock(blockId);
+        setTimeout(() => setCopiedBlock(null), 2000);
     };
+
+    // G-Code Blocks
+    const gcodeBlock1 = `; TOOL CHANGE G-CODE (Generic)
+M600 ; Filament change
+`;
+
+    const gcodeBlock2 = `; TOOL CHANGE G-CODE (Bambu/Prusa)
+M0 ; Pause for user
+`;
 
     return (
         <>
             {/* Desktop Sidebar */}
-            <aside className="hidden md:flex fixed left-0 top-0 h-full w-[280px] bg-white/60 dark:bg-[#1c1c1e]/60 border-r border-gray-200/50 dark:border-white/5 flex-col py-6 px-4 z-20 backdrop-blur-2xl">
+            <aside className="hidden md:flex fixed left-0 top-0 h-full w-[280px] bg-white/60 dark:bg-[#1c1c1e]/60 border-r border-gray-200/50 dark:border-white/5 flex-col py-6 px-4 z-20 backdrop-blur-xl">
                 <div className="mb-8 px-2 flex items-center gap-3">
                     <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-500/20">
                         T
@@ -86,31 +77,16 @@ export const Sidebar = () => {
                 </button>
 
                 <div className="flex-1 overflow-y-auto">
-                    <div className="flex items-center justify-between px-2 mb-3">
-                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Recent Files</h3>
-                        {history.length > 0 && (
-                            <button onClick={clearHistory} className="text-xs text-gray-400 hover:text-red-500 transition"><RotateCcw size={12} /></button>
-                        )}
-                    </div>
-
-                    <div className="space-y-1">
-                        {history.length === 0 ? (
-                            <div className="px-3 py-4 text-sm text-gray-400 italic text-center border border-dashed border-gray-200 dark:border-white/5 rounded-lg">
-                                No recently opened files
-                            </div>
-                        ) : (
-                            history.slice(0, 5).map((item, i) => (
-                                <div key={i} className="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/80 dark:hover:bg-white/10 cursor-pointer transition-all border border-transparent hover:border-gray-100 dark:hover:border-white/5">
-                                    <div className="w-8 h-8 rounded-lg bg-blue-100/50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
-                                        <Clock size={16} />
-                                    </div>
-                                    <div className="overflow-hidden text-left">
-                                        <div className="text-sm font-semibold text-gray-700 dark:text-gray-200 truncate">{item.filename}</div>
-                                        <div className="text-[10px] text-gray-400">{new Date(item.date).toLocaleDateString()}</div>
-                                    </div>
-                                </div>
-                            ))
-                        )}
+                    <div className="px-3 py-4 bg-blue-50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900/20">
+                        <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2 flex items-center gap-2">
+                            <BookOpen size={16} /> Guide
+                        </h3>
+                        <p className="text-sm text-blue-800 dark:text-blue-200 leading-relaxed">
+                            Learn how to set up your printer for multicolor without AMS.
+                        </p>
+                        <button onClick={() => setShowGuide(true)} className="mt-3 text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wide hover:underline">
+                            Read Guide &rarr;
+                        </button>
                     </div>
                 </div>
 
@@ -121,51 +97,91 @@ export const Sidebar = () => {
                             {isDarkMode ? <Moon size={16} /> : <Sun size={16} />}
                         </button>
                     </div>
-                    <div className="text-xs text-center text-gray-400 mt-4">v1.1.0 • Pure Client</div>
+                    <div className="text-xs text-center text-gray-400 mt-4">v1.2.0 • Pure Client</div>
                 </div>
             </aside>
 
 
-            {/* Mobile Overlays (History) */}
+            {/* Guide Overlay */}
             <AnimatePresence>
-                {showMobileHistory && (
+                {showGuide && (
                     <motion.div
                         initial={{ opacity: 0, y: "100%" }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: "100%" }}
                         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                        className="md:hidden fixed inset-0 z-40 bg-white dark:bg-[#1c1c1e] p-6 pt-12 overflow-y-auto"
+                        className="fixed inset-0 z-[60] bg-white dark:bg-[#000] overflow-y-auto"
                     >
-                        <div className="flex items-center justify-between mb-8">
-                            <h2 className="text-2xl font-bold">Recent Files</h2>
-                            <button onClick={() => setShowMobileHistory(false)} className="p-2 bg-gray-100 dark:bg-white/10 rounded-full">
+                        {/* Header */}
+                        <div className="sticky top-0 bg-white/80 dark:bg-[#000]/80 backdrop-blur-md p-6 border-b border-gray-100 dark:border-white/10 flex items-center justify-between z-10">
+                            <div>
+                                <h2 className="text-2xl font-bold tracking-tight">Manual Multicolor</h2>
+                                <p className="text-sm text-gray-500">No AMS? No Problem.</p>
+                            </div>
+                            <button onClick={() => setShowGuide(false)} className="p-2 bg-gray-100 dark:bg-white/10 rounded-full hover:bg-gray-200 dark:hover:bg-white/20 transition-colors">
                                 <X size={24} />
                             </button>
                         </div>
-                        <div className="space-y-2">
-                            {history.length === 0 ? (
-                                <p className="text-gray-400 text-center py-10">No history yet.</p>
-                            ) : (
-                                history.map((item, i) => (
-                                    <div key={i} className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-white/5 rounded-2xl">
-                                        <Clock className="text-blue-500" />
-                                        <div>
-                                            <div className="font-semibold">{item.filename}</div>
-                                            <div className="text-xs text-gray-400">{new Date(item.date).toLocaleDateString()}</div>
-                                        </div>
+
+                        {/* Content */}
+                        <div className="p-6 pb-32 max-w-2xl mx-auto space-y-8">
+
+                            <section>
+                                <h3 className="text-xl font-semibold mb-3">How it works</h3>
+                                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                                    By inserting a specific pauses command into your Slicer's "Tool Change" settings, the printer will pause exactly when a new color is needed. You can then swap the filament manually and resume the print.
+                                </p>
+                            </section>
+
+                            <section className="space-y-4">
+                                <div className="p-4 bg-gray-50 dark:bg-[#1c1c1e] rounded-2xl border border-gray-100 dark:border-white/5">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <span className="font-mono text-xs font-bold text-gray-400 uppercase tracking-wider">Option A: Standard (M600)</span>
+                                        <button
+                                            onClick={() => copyToClipboard(gcodeBlock1, 'b1')}
+                                            className="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-white/10 rounded-lg text-xs font-medium shadow-sm active:scale-95 transition-all"
+                                        >
+                                            {copiedBlock === 'b1' ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
+                                            {copiedBlock === 'b1' ? "Copied" : "Copy"}
+                                        </button>
                                     </div>
-                                ))
-                            )}
-                            {history.length > 0 && (
-                                <button onClick={clearHistory} className="w-full mt-8 py-3 text-red-500 font-medium bg-red-50 dark:bg-red-900/10 rounded-xl">
-                                    Clear History
-                                </button>
-                            )}
+                                    <pre className="font-mono text-sm overflow-x-auto text-gray-800 dark:text-gray-200">
+                                        {gcodeBlock1}
+                                    </pre>
+                                </div>
+
+                                <div className="p-4 bg-gray-50 dark:bg-[#1c1c1e] rounded-2xl border border-gray-100 dark:border-white/5">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <span className="font-mono text-xs font-bold text-gray-400 uppercase tracking-wider">Option B: Simple Pause (M0)</span>
+                                        <button
+                                            onClick={() => copyToClipboard(gcodeBlock2, 'b2')}
+                                            className="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-white/10 rounded-lg text-xs font-medium shadow-sm active:scale-95 transition-all"
+                                        >
+                                            {copiedBlock === 'b2' ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
+                                            {copiedBlock === 'b2' ? "Copied" : "Copy"}
+                                        </button>
+                                    </div>
+                                    <pre className="font-mono text-sm overflow-x-auto text-gray-800 dark:text-gray-200">
+                                        {gcodeBlock2}
+                                    </pre>
+                                </div>
+                            </section>
+
+                            <section>
+                                <h3 className="text-xl font-semibold mb-3">Setup in Slicer</h3>
+                                <ol className="list-decimal pl-5 space-y-2 text-gray-600 dark:text-gray-300">
+                                    <li>Open your Slicer settings (Printer Settings).</li>
+                                    <li>Go to <strong>"Custom G-code"</strong>.</li>
+                                    <li>Find <strong>"Tool Change G-code"</strong>.</li>
+                                    <li>Paste one of the blocks above.</li>
+                                    <li>Slice and print!</li>
+                                </ol>
+                            </section>
                         </div>
                     </motion.div>
                 )}
 
-                {/* Mobile Overlays (Settings) */}
+                {/* Mobile Settings Overlay */}
                 {showMobileSettings && (
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -202,7 +218,7 @@ export const Sidebar = () => {
                                         <div className="p-2 bg-purple-100 dark:bg-purple-900/30 text-purple-600 rounded-lg"><Settings size={18} /></div>
                                         <span className="font-medium">Version</span>
                                     </div>
-                                    <span className="text-xs text-gray-400">v1.1.0</span>
+                                    <span className="text-xs text-gray-400">v1.2.0</span>
                                 </div>
                             </div>
 
@@ -215,13 +231,13 @@ export const Sidebar = () => {
             </AnimatePresence>
 
 
-            {/* "iOS 26" Floating Dock - Refined */}
-            <nav className="md:hidden fixed bottom-8 left-1/2 -translate-x-1/2 w-[auto] min-w-[320px] bg-white/60 dark:bg-[#1c1c1e]/60 backdrop-blur-xl border border-white/20 dark:border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-[2.5rem] flex items-center justify-between px-2 pl-6 pr-6 py-2 z-50">
+            {/* Floating Dock (Optimized) */}
+            <nav className="md:hidden fixed bottom-8 left-1/2 -translate-x-1/2 w-[auto] min-w-[320px] bg-white/60 dark:bg-[#1c1c1e]/60 backdrop-blur-md border border-white/20 dark:border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-[2.5rem] flex items-center justify-between px-2 pl-6 pr-6 py-2 z-50">
                 <button
-                    onClick={() => setShowMobileHistory(true)}
+                    onClick={() => setShowGuide(true)}
                     className="group flex flex-col items-center justify-center w-14 h-14 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-all text-gray-500 dark:text-gray-400"
                 >
-                    <Clock size={24} className="group-active:scale-90 transition-transform" />
+                    <BookOpen size={24} className="group-active:scale-90 transition-transform" />
                 </button>
 
                 <div className="relative -top-1 mx-4">
@@ -244,14 +260,3 @@ export const Sidebar = () => {
     );
 };
 
-const NavItem = ({ icon, label, active = false }: { icon: React.ReactNode, label: string, active?: boolean }) => (
-    <button className={cn(
-        "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all",
-        active
-            ? "bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white"
-            : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5"
-    )}>
-        {icon}
-        {label}
-    </button>
-);
