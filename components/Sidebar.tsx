@@ -1,4 +1,3 @@
-```
 "use client";
 
 import React, { useEffect, useState } from 'react';
@@ -53,11 +52,10 @@ export const Sidebar = () => {
     };
 
     // G-Code Blocks
-    // G-Code Constants
-    const changeFilamentBlock = `; --- Manual Color Change Start-- -
-    M400 U1; Pause printer(parks at waste chute)
-M109 S[new_filament_temp]; Set temp for NEW filament
-    ; --- Manual Color Change End-- - `;
+    const changeFilamentBlock = `; --- Manual Color Change Start ---
+M400 U1             ; Pause printer (parks at waste chute)
+M109 S[new_filament_temp]  ; Set temp for NEW filament
+; --- Manual Color Change End ---`;
 
     return (
         <>
@@ -214,9 +212,9 @@ M109 S[new_filament_temp]; Set temp for NEW filament
                                                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 leading-relaxed" dangerouslySetInnerHTML={{ __html: t.guide.deletePartA_Desc }} />
                                                 <div className="bg-[#1D1D1F] rounded-xl p-4 overflow-hidden border border-white/10">
                                                     <pre className="font-mono text-[10px] text-red-400/60 line-through opacity-80 leading-relaxed">
-                                                        {`M620 M;enable remap
+                                                        {`M620 M ;enable remap
 M620 S[initial_no_support_extruder]A
-G392 S0;turn on clog detect
+G392 S0 ;turn on clog detect
 ... (large block) ...
 M621 S[initial_no_support_extruder]A`}
                                                     </pre>

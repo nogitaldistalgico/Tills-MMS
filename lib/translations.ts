@@ -66,14 +66,17 @@ export const translations = {
         // Settings
         settings: {
             language: "Language",
-            done: "Done"
+            done: "Done",
+            title: "Settings",
+            version: "Version",
+            versionValue: "v1.2.0"
         }
     },
     de: {
         // Sidebar
         sidebar: {
             title: "Tills MMS",
-            subtitle: "Filmenat Manager",
+            subtitle: "Filament Manager",
             newProject: "Neues Projekt",
             guideTitle: "Anleitung",
             guideDesc: "Lerne, wie du deinen Drucker ohne AMS für Multicolor einrichtest.",
@@ -134,7 +137,10 @@ export const translations = {
         // Settings
         settings: {
             language: "Sprache",
-            done: "Fertig"
+            done: "Fertig",
+            title: "Einstellungen",
+            version: "Version",
+            versionValue: "v1.2.0"
         }
     }
 };
