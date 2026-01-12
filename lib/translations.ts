@@ -32,6 +32,8 @@ export const translations = {
             deletePartB_Desc: "Scroll down to ~line 320 and delete the Tangle Detection line.",
             removeBlock: "Remove Block",
             removeBlock_Desc: "Find <code class='code-snippet'>; pull back filament to AMS</code> near line 65. Delete the block shown on the right.",
+            finalStepTitle: "How to Print",
+            finalStepDesc: "Save these settings as a new printer profile in Bambu Studio. You can then slice as usual (as if you had an AMS). The printer will automatically pause when a color change is needed. You simply need to press 'Unload' and 'Load' on the display and manually change the filament.",
             importantNote: "Important Note",
             importantNote_Desc: "Since we removed the initial heating command in Step 2 to bypass the AMS load check, you must <strong>manually load the first filament</strong> before starting your print. The printer will heat up and handle the rest correctly during calibration.",
             copy: "COPY",
