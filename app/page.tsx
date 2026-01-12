@@ -100,12 +100,12 @@ export default function Home() {
     return (
         <div className="min-h-full max-w-5xl mx-auto p-6 md:p-12 pb-40">
             {/* Header */}
-            <header className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-                <div className="space-y-4">
-                    <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-600 to-gray-400 dark:from-white dark:via-gray-100 dark:to-gray-500 pb-2">
+            <header className="flex items-center justify-between mb-16 gap-4">
+                <div className="space-y-2">
+                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-600 to-gray-400 dark:from-white dark:via-gray-100 dark:to-gray-500">
                         {job ? job.filename.replace(/\.gcode\.3mf$/i, '').replace(/\.gcode$/i, '').replace(/\.3mf$/i, '') : t.home.dashboard}
                     </h1>
-                    <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 font-medium max-w-2xl leading-relaxed">
+                    <p className="text-base md:text-lg text-gray-500 dark:text-gray-400 font-medium max-w-2xl leading-relaxed">
                         {job
                             ? t.home.subtitleStats.replace('{completed}', completedTasks.toString()).replace('{total}', totalTasks.toString())
                             : t.home.subtitleEmpty}
@@ -113,13 +113,13 @@ export default function Home() {
                 </div>
 
                 {job && (
-                    <div className="flex gap-4">
+                    <div className="shrink-0">
                         <button
                             onClick={handleReset}
-                            className="group flex items-center justify-center p-3 text-gray-400 hover:text-blue-500 hover:bg-blue-50/50 dark:hover:bg-white/10 rounded-full transition-all backdrop-blur-md"
+                            className="group flex items-center justify-center w-12 h-12 text-gray-400 hover:text-blue-500 hover:bg-blue-50/50 dark:hover:bg-white/10 rounded-full transition-all backdrop-blur-md border border-gray-200/50 dark:border-white/5"
                             title={t.home.resetAll}
                         >
-                            <RefreshCcw size={24} className="group-hover:rotate-180 transition-transform duration-500" />
+                            <RefreshCcw size={22} className="group-hover:rotate-180 transition-transform duration-500" />
                         </button>
                     </div>
                 )}
@@ -238,9 +238,9 @@ export default function Home() {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0 }}
                         onClick={scrollToTop}
-                        className="fixed bottom-36 right-6 w-14 h-14 bg-white/20 dark:bg-black/20 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white hover:scale-110 transition-all z-40 border border-white/20 dark:border-white/10"
+                        className="fixed bottom-32 right-6 w-12 h-12 bg-white/60 dark:bg-[#1c1c1e]/60 backdrop-blur-md shadow-xl rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white hover:scale-110 transition-all z-40 border border-white/20 dark:border-white/10"
                     >
-                        <ArrowUp size={24} />
+                        <ArrowUp size={20} />
                     </motion.button>
                 )}
             </AnimatePresence>

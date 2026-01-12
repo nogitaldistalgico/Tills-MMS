@@ -18,6 +18,10 @@ export const metadata: Metadata = {
         userScalable: false,
     },
     themeColor: "#F5F5F7",
+    icons: {
+        icon: '/logo.png',
+        apple: '/logo.png',
+    },
     appleWebApp: {
         capable: true,
         statusBarStyle: "black-translucent",

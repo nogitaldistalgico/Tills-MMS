@@ -1,7 +1,9 @@
+```tsx
 "use client";
 
 import React, { useEffect, useState } from 'react';
 import { Settings, Plus, X, Moon, Sun, BookOpen, Copy, Check, Globe } from 'lucide-react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/lib/LanguageContext';
@@ -52,22 +54,22 @@ export const Sidebar = () => {
     };
 
     // G-Code Blocks
-    const changeFilamentBlock = `; --- Manual Color Change Start ---
-M400 U1             ; Pause printer (parks at waste chute)
-M109 S[new_filament_temp]  ; Set temp for NEW filament
-; --- Manual Color Change End ---`;
+    const changeFilamentBlock = `; --- Manual Color Change Start-- -
+    M400 U1; Pause printer(parks at waste chute)
+M109 S[new_filament_temp]; Set temp for NEW filament
+    ; --- Manual Color Change End-- - `;
 
     return (
         <>
             {/* Desktop Sidebar */}
             <aside className="hidden md:flex fixed left-0 top-0 h-full w-[280px] bg-white/60 dark:bg-[#1c1c1e]/60 border-r border-gray-200/50 dark:border-white/5 flex-col py-6 px-4 z-20 backdrop-blur-xl">
                 <div className="mb-8 px-2 flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-500/20">
-                        T
+                    <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm shrink-0">
+                         <Image src="/logo.png" alt="Logo" fill className="object-cover" />
                     </div>
                     <div>
-                        <span className="font-bold text-lg tracking-tight block leading-none">{t.sidebar.title}</span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400 font-medium tracking-wide">{t.sidebar.subtitle}</span>
+                        <h1 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white leading-none mb-1">{t.sidebar.title}</h1>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">{t.sidebar.subtitle}</p>
                     </div>
                 </div>
 
@@ -212,9 +214,9 @@ M109 S[new_filament_temp]  ; Set temp for NEW filament
                                                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 leading-relaxed" dangerouslySetInnerHTML={{ __html: t.guide.deletePartA_Desc }} />
                                                 <div className="bg-[#1D1D1F] rounded-xl p-4 overflow-hidden border border-white/10">
                                                     <pre className="font-mono text-[10px] text-red-400/60 line-through opacity-80 leading-relaxed">
-                                                        {`M620 M ;enable remap
+                                                        {`M620 M;enable remap
 M620 S[initial_no_support_extruder]A
-G392 S0 ;turn on clog detect
+G392 S0;turn on clog detect
 ... (large block) ...
 M621 S[initial_no_support_extruder]A`}
                                                     </pre>
@@ -299,7 +301,7 @@ M621 S255`}
 
 
             {/* Floating Dock (Optimized) */}
-            <nav className="md:hidden fixed bottom-8 left-1/2 -translate-x-1/2 w-[auto] min-w-[320px] bg-white/20 dark:bg-black/20 backdrop-blur-2xl border border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-[2.5rem] flex items-center justify-between px-2 pl-6 pr-6 py-2 z-50">
+            <nav className="md:hidden fixed bottom-8 left-1/2 -translate-x-1/2 w-[auto] min-w-[320px] bg-white/70 dark:bg-[#1c1c1e]/70 backdrop-blur-lg border border-white/20 dark:border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-[2.5rem] flex items-center justify-between px-2 pl-6 pr-6 py-2 z-50">
                 <button
                     onClick={() => setShowGuide(true)}
                     className="group flex flex-col items-center justify-center w-14 h-14 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-all text-gray-500 dark:text-gray-400"
