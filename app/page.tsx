@@ -7,11 +7,13 @@ import { api, PrintJob, Task } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { FileUpload } from '@/components/FileUpload';
 import { TaskRow } from '@/components/TaskRow';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function Home() {
     const [job, setJob] = useState<PrintJob | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { t } = useLanguage();
 
     // Persistence Loading
     useEffect(() => {
@@ -51,7 +53,7 @@ export default function Home() {
 
         } catch (err) {
             console.error(err);
-            setError("Failed to parse file. Please try again.");
+            setError(t.home.errorParse);
         } finally {
             setIsProcessing(false);
         }
@@ -73,7 +75,7 @@ export default function Home() {
 
     const handleReset = () => {
         if (!job) return;
-        if (confirm("Reset all tasks?")) {
+        if (confirm(t.home.confirmReset)) {
             setJob(prev => {
                 if (!prev) return null;
                 return {
@@ -101,12 +103,12 @@ export default function Home() {
             <header className="flex items-center justify-between mb-12">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight mb-2">
-                        {job ? job.filename.replace(/\.gcode\.3mf$/i, '').replace(/\.gcode$/i, '').replace(/\.3mf$/i, '') : "Dashboard"}
+                        {job ? job.filename.replace(/\.gcode\.3mf$/i, '').replace(/\.gcode$/i, '').replace(/\.3mf$/i, '') : t.home.dashboard}
                     </h1>
                     <p className="text-gray-500 dark:text-gray-400">
                         {job
-                            ? `${completedTasks} of ${totalTasks} tasks completed`
-                            : "Manage your 3D print filament swaps efficiently."}
+                            ? t.home.subtitleStats.replace('{completed}', completedTasks.toString()).replace('{total}', totalTasks.toString())
+                            : t.home.subtitleEmpty}
                     </p>
                 </div>
 
@@ -115,7 +117,7 @@ export default function Home() {
                         <button
                             onClick={handleReset}
                             className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-white/10 rounded-full transition-all"
-                            title="Reset All"
+                            title={t.home.resetAll}
                         >
                             <RefreshCcw size={20} />
                         </button>
@@ -155,13 +157,13 @@ export default function Home() {
                         {/* Empty State / Hints */}
                         <div className="mt-12 grid md:grid-cols-2 gap-6">
                             <FeatureCard
-                                title="Smart Parsing"
-                                desc="Automatically extracts filament changes from Bambu/Prusa G-code."
+                                title={t.home.smartParsing}
+                                desc={t.home.smartParsingDesc}
                                 delay={0.1}
                             />
                             <FeatureCard
-                                title="Progress Tracking"
-                                desc="Remember where you left off, even if you close the browser."
+                                title={t.home.progressTracking}
+                                desc={t.home.progressTrackingDesc}
                                 delay={0.2}
                             />
                         </div>
@@ -188,13 +190,13 @@ export default function Home() {
                                 <div className="w-16 h-16 bg-green-100 dark:bg-green-800 text-green-600 dark:text-green-300 rounded-full flex items-center justify-center mx-auto mb-4">
                                     <CheckCircle size={32} />
                                 </div>
-                                <h2 className="text-2xl font-bold text-green-800 dark:text-green-200 mb-2">Print Complete!</h2>
-                                <p className="text-green-600 dark:text-green-400">Great job navigating those filament swaps.</p>
+                                <h2 className="text-2xl font-bold text-green-800 dark:text-green-200 mb-2">{t.home.printComplete}</h2>
+                                <p className="text-green-600 dark:text-green-400">{t.home.printCompleteDesc}</p>
                                 <button
                                     onClick={() => setJob(null)}
                                     className="mt-6 px-6 py-2 bg-green-600 text-white rounded-full font-medium hover:bg-green-700 transition"
                                 >
-                                    Start New Print
+                                    {t.home.startNewPrint}
                                 </button>
                             </motion.div>
                         )}

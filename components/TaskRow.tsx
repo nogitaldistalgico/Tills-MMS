@@ -2,9 +2,10 @@
 
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, ArrowRight } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Task } from '@/lib/api';
+import { useLanguage } from '@/lib/LanguageContext';
 
 interface TaskRowProps {
     task: Task;
@@ -13,6 +14,8 @@ interface TaskRowProps {
 }
 
 export const TaskRow: React.FC<TaskRowProps> = ({ task, onToggle, index }) => {
+    const { t } = useLanguage();
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -70,8 +73,8 @@ export const TaskRow: React.FC<TaskRowProps> = ({ task, onToggle, index }) => {
 
             {/* Stats */}
             <div className="text-right text-xs text-gray-400 font-medium tabular-nums">
-                <div>Swap #{index + 1}</div>
-                <div>Z: {task.z_height.toFixed(2)}mm</div>
+                <div>{t.task.swap} #{index + 1}</div>
+                <div>{t.task.z}: {task.z_height.toFixed(2)}mm</div>
             </div>
         </motion.div>
     );

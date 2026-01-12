@@ -4,6 +4,7 @@ import React, { useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Upload, FileType } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/lib/LanguageContext';
 
 interface FileUploadProps {
     onFileSelect: (file: File) => void;
@@ -12,6 +13,7 @@ interface FileUploadProps {
 
 export const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, isProcessing }) => {
     const [isDragOver, setIsDragOver] = useState(false);
+    const { t } = useLanguage();
 
     const handleDrop = useCallback((e: React.DragEvent) => {
         e.preventDefault();
@@ -90,10 +92,10 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, isProcessi
 
                 <div className="space-y-2">
                     <h3 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
-                        {isProcessing ? "Processing File..." : "Drop Print File Here"}
+                        {isProcessing ? t.home.processing : t.home.dropFile}
                     </h3>
                     <p className="text-lg text-gray-400 font-medium">
-                        or click to browse <span className="text-blue-500 dark:text-blue-400">.gcode</span> or <span className="text-blue-500 dark:text-blue-400">.3mf</span>
+                        {t.home.orClick} <span className="text-blue-500 dark:text-blue-400">.gcode</span> / <span className="text-blue-500 dark:text-blue-400">.3mf</span>
                     </p>
                 </div>
             </div>
