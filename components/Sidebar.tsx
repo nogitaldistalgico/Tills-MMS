@@ -122,59 +122,104 @@ M109 S[new_filament_temp]  ; Set temp for NEW filament
                         </div>
 
                         {/* Content */}
-                        <div className="p-6 pb-32 max-w-2xl mx-auto space-y-8">
+                        <div className="p-6 pb-32 max-w-2xl mx-auto space-y-12">
 
+                            {/* Intro */}
                             <section>
-                                <h3 className="text-xl font-semibold mb-3">How it works</h3>
-                                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                                    By inserting a specific pauses command into your Slicer's "Tool Change" settings, the printer will pause exactly when a new color is needed. You can then swap the filament manually and resume the print.
+                                <p className="text-gray-600 dark:text-gray-300 leading-relaxed font-medium">
+                                    To enable manual multicolor printing on your Bambu Lab printer without AMS, you need to modify three G-code sections in your "Printer Settings".
                                 </p>
                             </section>
 
+                            {/* 1. Change Filament G-code */}
                             <section className="space-y-4">
-                                <div className="p-4 bg-gray-50 dark:bg-[#1c1c1e] rounded-2xl border border-gray-100 dark:border-white/5">
-                                    <div className="flex items-center justify-between mb-3">
-                                        <span className="font-mono text-xs font-bold text-gray-400 uppercase tracking-wider">Option A: Standard (M600)</span>
-                                        <button
-                                            onClick={() => copyToClipboard(gcodeBlock1, 'b1')}
-                                            className="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-white/10 rounded-lg text-xs font-medium shadow-sm active:scale-95 transition-all"
-                                        >
-                                            {copiedBlock === 'b1' ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
-                                            {copiedBlock === 'b1' ? "Copied" : "Copy"}
-                                        </button>
-                                    </div>
-                                    <pre className="font-mono text-sm overflow-x-auto text-gray-800 dark:text-gray-200">
-                                        {gcodeBlock1}
-                                    </pre>
-                                </div>
+                                <h3 className="text-lg font-bold flex items-center gap-2 text-gray-900 dark:text-white">
+                                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 text-xs text-center border border-blue-200 dark:border-blue-800">1</span>
+                                    Change Filament G-code
+                                </h3>
+                                <p className="text-sm text-gray-500">
+                                    Replace the entire content of this block with the code below. This pauses the printer and manages temperature.
+                                </p>
 
-                                <div className="p-4 bg-gray-50 dark:bg-[#1c1c1e] rounded-2xl border border-gray-100 dark:border-white/5">
-                                    <div className="flex items-center justify-between mb-3">
-                                        <span className="font-mono text-xs font-bold text-gray-400 uppercase tracking-wider">Option B: Simple Pause (M0)</span>
-                                        <button
-                                            onClick={() => copyToClipboard(gcodeBlock2, 'b2')}
-                                            className="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-white/10 rounded-lg text-xs font-medium shadow-sm active:scale-95 transition-all"
-                                        >
-                                            {copiedBlock === 'b2' ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
-                                            {copiedBlock === 'b2' ? "Copied" : "Copy"}
-                                        </button>
-                                    </div>
-                                    <pre className="font-mono text-sm overflow-x-auto text-gray-800 dark:text-gray-200">
-                                        {gcodeBlock2}
+                                <div className="p-4 bg-gray-50 dark:bg-[#1c1c1e] rounded-2xl border border-gray-200 dark:border-white/10 relative group">
+                                    <button
+                                        onClick={() => copyToClipboard(changeFilamentBlock, 'b1')}
+                                        className="absolute top-3 right-3 flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-white/10 rounded-lg text-xs font-medium shadow-sm active:scale-95 transition-all z-10"
+                                    >
+                                        {copiedBlock === 'b1' ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
+                                        {copiedBlock === 'b1' ? "Copied" : "Copy"}
+                                    </button>
+                                    <pre className="font-mono text-sm overflow-x-auto text-blue-600 dark:text-blue-400 whitespace-pre">
+                                        {changeFilamentBlock}
                                     </pre>
                                 </div>
                             </section>
 
-                            <section>
-                                <h3 className="text-xl font-semibold mb-3">Setup in Slicer</h3>
-                                <ol className="list-decimal pl-5 space-y-2 text-gray-600 dark:text-gray-300">
-                                    <li>Open your Slicer settings (Printer Settings).</li>
-                                    <li>Go to <strong>"Custom G-code"</strong>.</li>
-                                    <li>Find <strong>"Tool Change G-code"</strong>.</li>
-                                    <li>Paste one of the blocks above.</li>
-                                    <li>Slice and print!</li>
-                                </ol>
+                            {/* 2. Machine Start G-code */}
+                            <section className="space-y-4">
+                                <h3 className="text-lg font-bold flex items-center gap-2 text-gray-900 dark:text-white">
+                                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 text-xs text-center border border-blue-200 dark:border-blue-800">2</span>
+                                    Machine Start G-code
+                                </h3>
+
+                                <div className="space-y-6">
+                                    <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-xl border border-red-100 dark:border-red-900/20">
+                                        <h4 className="text-sm font-bold text-red-700 dark:text-red-400 mb-2 uppercase tracking-wide">Delete Part A (AMS Load)</h4>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                            Search for <code className="bg-white dark:bg-white/10 px-1 rounded">G1 X-13.5 F3000</code>. Delete the long block immediately following it, starting from <code className="bg-white dark:bg-white/10 px-1 rounded">M620 M</code> up to <code className="bg-white dark:bg-white/10 px-1 rounded">M621 ...</code>.
+                                        </p>
+                                        <div className="max-h-40 overflow-y-auto rounded-lg border border-red-200 dark:border-red-900/30">
+                                            <pre className="p-3 text-xs font-mono text-red-600/70 dark:text-red-400/70 line-through">
+                                                {`M620 M ;enable remap
+M620 S[initial_no_support_extruder]A
+G392 S0 ;turn on clog detect
+... (large block) ...
+M621 S[initial_no_support_extruder]A`}
+                                            </pre>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-xl border border-red-100 dark:border-red-900/20">
+                                        <h4 className="text-sm font-bold text-red-700 dark:text-red-400 mb-2 uppercase tracking-wide">Delete Part B (Tangle Detect)</h4>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                            Scroll down (~line 320) and delete this single line:
+                                        </p>
+                                        <pre className="p-2 bg-white dark:bg-black/20 rounded-lg text-xs font-mono text-red-600 dark:text-red-400 line-through">
+                                            M620.3 W1; === turn on filament tangle detection===
+                                        </pre>
+                                    </div>
+                                </div>
                             </section>
+
+                            {/* 3. Machine End G-code */}
+                            <section className="space-y-4">
+                                <h3 className="text-lg font-bold flex items-center gap-2 text-gray-900 dark:text-white">
+                                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 text-xs text-center border border-blue-200 dark:border-blue-800">3</span>
+                                    Machine End G-code
+                                </h3>
+                                <p className="text-sm text-gray-500">
+                                    Prevent the printer from pulling back filament at the end. Search for <code className="bg-gray-100 dark:bg-white/10 px-1 rounded">; pull back filament to AMS</code> (~line 65) and delete the block below it.
+                                </p>
+
+                                <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-xl border border-red-100 dark:border-red-900/20">
+                                    <h4 className="text-sm font-bold text-red-700 dark:text-red-400 mb-2 uppercase tracking-wide">Delete this block</h4>
+                                    <pre className="font-mono text-xs text-red-600/80 dark:text-red-400/80 line-through whitespace-pre">
+                                        {`; pull back filament to AMS
+M620 S255
+G1 X181 F12000
+T255
+G1 X0 F18000
+G1 X-13.0 F3000
+G1 X0 F18000 ; wipe
+M621 S255`}
+                                    </pre>
+                                </div>
+                            </section>
+
+                            <div className="p-4 rounded-xl bg-orange-50 dark:bg-orange-900/10 border border-orange-100 dark:border-orange-900/20 text-sm text-orange-800 dark:text-orange-200">
+                                <strong>Note:</strong> Since we removed the initial heating command in Step 2, ensure you manually load the first filament before starting the print. The printer will heat up during calibration.
+                            </div>
+
                         </div>
                     </motion.div>
                 )}
