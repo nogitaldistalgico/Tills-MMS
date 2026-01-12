@@ -106,6 +106,8 @@ export const translations = {
             deletePartB_Desc: "Scrolle runter zu ~Zeile 320 und lösche die Zeile für 'Tangle Detection'.",
             removeBlock: "Block entfernen",
             removeBlock_Desc: "Finde <code class='code-snippet'>; pull back filament to AMS</code> nahe Zeile 65. Lösche den Block rechts.",
+            finalStepTitle: "So wird gedruckt",
+            finalStepDesc: "Speichere diese Einstellungen als neues Drucker-Profil in Bambu Studio. Danach kannst du wie gewohnt slicen (als hättest du ein AMS). Der Drucker wird automatisch pausieren, wenn ein Farbwechsel ansteht. Du musst dann lediglich am Display 'Unload' und 'Load' drücken und das Filament manuell wechseln.",
             importantNote: "Wichtiger Hinweis",
             importantNote_Desc: "Da wir im Schritt 2 den initialen Heizbefehl entfernt haben (um den AMS-Check zu umgehen), musst du das <strong>erste Filament manuell laden</strong>, bevor du den Druck startest.",
             copy: "KOPIEREN",
