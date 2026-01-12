@@ -15,6 +15,17 @@ export default function Home() {
     const [error, setError] = useState<string | null>(null);
     const { t } = useLanguage();
 
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 120);
+        };
+        window.addEventListener('scroll', handleScroll);
+        handleScroll(); // Check initial state
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     // Persistence Loading
     useEffect(() => {
         const savedJob = localStorage.getItem('currentJob');

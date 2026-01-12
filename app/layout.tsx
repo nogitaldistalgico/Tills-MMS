@@ -19,8 +19,9 @@ export const metadata: Metadata = {
     },
     themeColor: "#F5F5F7",
     icons: {
-        icon: '/logo.png',
-        apple: '/logo.png',
+        icon: '/logo.png?v=3',
+        shortcut: '/logo.png?v=3',
+        apple: '/logo.png?v=3',
     },
     appleWebApp: {
         capable: true,
