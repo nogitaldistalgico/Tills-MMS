@@ -14,7 +14,7 @@ export const Sidebar = () => {
 
     useEffect(() => {
         // Check Dark Mode
-        if (document.documentElement.classList.contains('dark')) {
+        if (typeof window !== 'undefined' && document.documentElement.classList.contains('dark')) {
             setIsDarkMode(true);
         }
     }, []);
@@ -100,131 +100,226 @@ M109 S[new_filament_temp]  ; Set temp for NEW filament
             </aside>
 
 
-            {/* Guide Overlay */}
+            {/* Guide Overlay - World Class Redesign */}
             <AnimatePresence>
                 {showGuide && (
                     <motion.div
-                        initial={{ opacity: 0, y: "100%" }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: "100%" }}
-                        transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                        className="fixed inset-0 z-[60] bg-white dark:bg-[#000] overflow-y-auto"
+                        initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.98, y: 10 }}
+                        transition={{ type: "spring", damping: 30, stiffness: 300, mass: 0.8 }}
+                        className="fixed inset-0 z-[60] bg-[#F5F5F7] dark:bg-[#000] overflow-y-auto"
                     >
-                        {/* Header */}
-                        <div className="sticky top-0 bg-white/80 dark:bg-[#000]/80 backdrop-blur-md p-6 border-b border-gray-100 dark:border-white/10 flex items-center justify-between z-10">
-                            <div>
-                                <h2 className="text-2xl font-bold tracking-tight">Manual Multicolor</h2>
-                                <p className="text-sm text-gray-500">No AMS? No Problem.</p>
+                        {/* High-End Sticky Header */}
+                        <div className="sticky top-0 bg-[#F5F5F7]/80 dark:bg-[#000]/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-white/10 z-20 transition-all duration-300">
+                            <div className="max-w-3xl mx-auto px-6 h-16 flex items-center justify-between">
+                                <h2 className="text-lg font-semibold tracking-tight text-gray-900 dark:text-white">Manual Multicolor Guide</h2>
+                                <button
+                                    onClick={() => setShowGuide(false)}
+                                    className="w-8 h-8 flex items-center justify-center bg-gray-200/50 dark:bg-white/10 rounded-full hover:bg-gray-300/50 dark:hover:bg-white/20 transition-all backdrop-blur-sm"
+                                >
+                                    <X size={16} className="text-gray-600 dark:text-gray-300" />
+                                </button>
                             </div>
-                            <button onClick={() => setShowGuide(false)} className="p-2 bg-gray-100 dark:bg-white/10 rounded-full hover:bg-gray-200 dark:hover:bg-white/20 transition-colors">
-                                <X size={24} />
-                            </button>
                         </div>
 
-                        {/* Content */}
-                        <div className="p-6 pb-32 max-w-2xl mx-auto space-y-12">
+                        {/* Content Container */}
+                        <div className="max-w-3xl mx-auto px-6 py-12 pb-32 space-y-16">
 
-                            {/* Intro */}
-                            <section>
-                                <p className="text-gray-600 dark:text-gray-300 leading-relaxed font-medium">
+                            {/* Hero / Intro */}
+                            <section className="text-center space-y-6">
+                                <div className="w-16 h-16 bg-gradient-to-tr from-blue-500 to-cyan-400 rounded-3xl mx-auto shadow-2xl shadow-blue-500/30 flex items-center justify-center text-white mb-6">
+                                    <BookOpen size={32} className="stroke-[2.5]" />
+                                </div>
+                                <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
+                                    Unlock Multicolor.
+                                </h1>
+                                <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed font-medium">
                                     To enable manual multicolor printing on your Bambu Lab A1 Series printer without AMS, you need to modify three G-code sections in your Printer Preset. You can save the changes to a new preset for this Purpose only.
                                 </p>
                             </section>
 
-                            {/* 1. Change Filament G-code */}
-                            <section className="space-y-4">
-                                <h3 className="text-lg font-bold flex items-center gap-2 text-gray-900 dark:text-white">
-                                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 text-xs text-center border border-blue-200 dark:border-blue-800">1</span>
-                                    Change Filament G-code
-                                </h3>
-                                <p className="text-sm text-gray-500">
-                                    Replace the entire content of this block with the code below. This pauses the printer and manages temperature.
-                                </p>
+                            {/* Step 1 */}
+                            <section className="relative group">
+                                <div className="absolute -left-4 top-0 bottom-0 w-[2px] bg-gray-200 dark:bg-white/5 md:block hidden" />
+                                <div className="space-y-6 md:pl-8">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-blue-600/30 z-10 ring-4 ring-[#F5F5F7] dark:ring-black">1</div>
+                                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Change Filament G-Code</h3>
+                                    </div>
+                                    <p className="text-gray-500 dark:text-gray-400 text-lg leading-relaxed">
+                                        This snippet ensures the printer pauses and maintains the correct temperature during the swap. Replace the existing block entirely.
+                                    </p>
 
-                                <div className="p-4 bg-gray-50 dark:bg-[#1c1c1e] rounded-2xl border border-gray-200 dark:border-white/10 relative group">
-                                    <button
-                                        onClick={() => copyToClipboard(changeFilamentBlock, 'b1')}
-                                        className="absolute top-3 right-3 flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-white/10 rounded-lg text-xs font-medium shadow-sm active:scale-95 transition-all z-10"
-                                    >
-                                        {copiedBlock === 'b1' ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
-                                        {copiedBlock === 'b1' ? "Copied" : "Copy"}
-                                    </button>
-                                    <pre className="font-mono text-sm overflow-x-auto text-blue-600 dark:text-blue-400 whitespace-pre">
-                                        {changeFilamentBlock}
-                                    </pre>
+                                    <div className="rounded-2xl overflow-hidden bg-[#1D1D1F] border border-white/10 shadow-2xl shadow-black/20 group-hover:shadow-blue-900/10 transition-shadow duration-500">
+                                        <div className="flex items-center justify-between px-4 py-3 bg-white/5 border-b border-white/5">
+                                            <div className="flex gap-1.5">
+                                                <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
+                                                <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
+                                                <div className="w-3 h-3 rounded-full bg-[#28C840]" />
+                                            </div>
+                                            <button
+                                                onClick={() => copyToClipboard(changeFilamentBlock, 'b1')}
+                                                className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 transition-all text-[11px] font-semibold text-white/90 tracking-wide uppercase"
+                                            >
+                                                {copiedBlock === 'b1' ? <Check size={12} className="text-[#28C840]" /> : <Copy size={12} />}
+                                                {copiedBlock === 'b1' ? "COPIED" : "COPY G-CODE"}
+                                            </button>
+                                        </div>
+                                        <div className="p-6 overflow-x-auto">
+                                            <pre className="font-mono text-sm text-blue-300 leading-relaxed whitespace-pre">
+                                                {changeFilamentBlock}
+                                            </pre>
+                                        </div>
+                                    </div>
                                 </div>
                             </section>
 
-                            {/* 2. Machine Start G-code */}
-                            <section className="space-y-4">
-                                <h3 className="text-lg font-bold flex items-center gap-2 text-gray-900 dark:text-white">
-                                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 text-xs text-center border border-blue-200 dark:border-blue-800">2</span>
-                                    Machine Start G-code
-                                </h3>
+                            {/* Step 2 */}
+                            <section className="relative group">
+                                <div className="absolute -left-4 top-0 bottom-0 w-[2px] bg-gray-200 dark:bg-white/5 md:block hidden" />
+                                <div className="space-y-6 md:pl-8">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-8 h-8 rounded-full bg-gray-900 dark:bg-white dark:text-black text-white flex items-center justify-center font-bold text-sm shadow-lg z-10 ring-4 ring-[#F5F5F7] dark:ring-black">2</div>
+                                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Machine Start G-Code</h3>
+                                    </div>
+                                    <p className="text-gray-500 dark:text-gray-400 text-lg leading-relaxed">
+                                        Remove the automation sequences that require the AMS. Locate and delete these two specific sections.
+                                    </p>
 
-                                <div className="space-y-6">
-                                    <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-xl border border-red-100 dark:border-red-900/20">
-                                        <h4 className="text-sm font-bold text-red-700 dark:text-red-400 mb-2 uppercase tracking-wide">Delete Part A (AMS Load)</h4>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                                            Search for <code className="bg-white dark:bg-white/10 px-1 rounded">G1 X-13.5 F3000</code>. Delete the long block immediately following it, starting from <code className="bg-white dark:bg-white/10 px-1 rounded">M620 M</code> up to <code className="bg-white dark:bg-white/10 px-1 rounded">M621 ...</code>.
-                                        </p>
-                                        <div className="max-h-40 overflow-y-auto rounded-lg border border-red-200 dark:border-red-900/30">
-                                            <pre className="p-3 text-xs font-mono text-red-600/70 dark:text-red-400/70 line-through">
-                                                {`M620 M ;enable remap
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        {/* Deletion Card A */}
+                                        <div className="p-1 rounded-3xl bg-gradient-to-b from-red-500/20 to-transparent">
+                                            <div className="bg-white dark:bg-[#1C1C1E] rounded-[1.4rem] p-6 h-full border border-red-500/20 dark:border-red-500/30">
+                                                <div className="flex items-center gap-2 mb-4 text-red-600 dark:text-red-400 font-bold text-sm uppercase tracking-wider">
+                                                    <X size={16} /> Delete Part A
+                                                </div>
+                                                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
+                                                    Search for <code className="bg-gray-100 dark:bg-white/10 px-1.5 py-0.5 rounded text-xs font-mono">G1 X-13.5 F3000</code>. Delete the block immediately following it.
+                                                </p>
+                                                <div className="bg-[#1D1D1F] rounded-xl p-4 overflow-hidden border border-white/10">
+                                                    <pre className="font-mono text-[10px] text-red-400/60 line-through opacity-80 leading-relaxed">
+                                                        {`M620 M ;enable remap
 M620 S[initial_no_support_extruder]A
 G392 S0 ;turn on clog detect
 ... (large block) ...
 M621 S[initial_no_support_extruder]A`}
-                                            </pre>
+                                                    </pre>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-xl border border-red-100 dark:border-red-900/20">
-                                        <h4 className="text-sm font-bold text-red-700 dark:text-red-400 mb-2 uppercase tracking-wide">Delete Part B (Tangle Detect)</h4>
-                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                                            Scroll down (~line 320) and delete this single line:
-                                        </p>
-                                        <pre className="p-2 bg-white dark:bg-black/20 rounded-lg text-xs font-mono text-red-600 dark:text-red-400 line-through">
-                                            M620.3 W1; === turn on filament tangle detection===
-                                        </pre>
+                                        {/* Deletion Card B */}
+                                        <div className="p-1 rounded-3xl bg-gradient-to-b from-red-500/20 to-transparent">
+                                            <div className="bg-white dark:bg-[#1C1C1E] rounded-[1.4rem] p-6 h-full border border-red-500/20 dark:border-red-500/30">
+                                                <div className="flex items-center gap-2 mb-4 text-red-600 dark:text-red-400 font-bold text-sm uppercase tracking-wider">
+                                                    <X size={16} /> Delete Part B
+                                                </div>
+                                                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
+                                                    Scroll down to ~line 320 and delete the Tangle Detection line.
+                                                </p>
+                                                <div className="bg-[#1D1D1F] rounded-xl p-4 overflow-hidden border border-white/10">
+                                                    <pre className="font-mono text-[10px] text-red-400/60 line-through opacity-80 leading-relaxed">
+                                                        M620.3 W1; === turn on filament tangle detection===
+                                                    </pre>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </section>
 
-                            {/* 3. Machine End G-code */}
-                            <section className="space-y-4">
-                                <h3 className="text-lg font-bold flex items-center gap-2 text-gray-900 dark:text-white">
-                                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 text-xs text-center border border-blue-200 dark:border-blue-800">3</span>
-                                    Machine End G-code
-                                </h3>
-                                <p className="text-sm text-gray-500">
-                                    Prevent the printer from pulling back filament at the end. Search for <code className="bg-gray-100 dark:bg-white/10 px-1 rounded">; pull back filament to AMS</code> (~line 65) and delete the block below it.
-                                </p>
+                            {/* Step 3 */}
+                            <section className="relative group">
+                                <div className="absolute -left-4 top-0 bottom-0 w-[2px] bg-gray-200 dark:bg-white/5 md:block hidden" />
+                                <div className="space-y-6 md:pl-8">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-8 h-8 rounded-full bg-gray-900 dark:bg-white dark:text-black text-white flex items-center justify-center font-bold text-sm shadow-lg z-10 ring-4 ring-[#F5F5F7] dark:ring-black">3</div>
+                                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Machine End G-Code</h3>
+                                    </div>
+                                    <p className="text-gray-500 dark:text-gray-400 text-lg leading-relaxed">
+                                        Prevent the printer from attempting to rewind the filament into the AMS at the end of the print.
+                                    </p>
 
-                                <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-xl border border-red-100 dark:border-red-900/20">
-                                    <h4 className="text-sm font-bold text-red-700 dark:text-red-400 mb-2 uppercase tracking-wide">Delete this block</h4>
-                                    <pre className="font-mono text-xs text-red-600/80 dark:text-red-400/80 line-through whitespace-pre">
-                                        {`; pull back filament to AMS
+                                    <div className="p-1 rounded-3xl bg-gradient-to-b from-gray-200 to-transparent dark:from-white/10">
+                                        <div className="bg-white dark:bg-[#1C1C1E] rounded-[1.4rem] p-6 border border-gray-100 dark:border-white/5 relative overflow-hidden">
+                                            <div className="flex flex-col md:flex-row gap-6">
+                                                <div className="flex-1">
+                                                    <div className="flex items-center gap-2 mb-3 text-red-600 dark:text-red-400 font-bold text-sm uppercase tracking-wider">
+                                                        <X size={16} /> Remove Block
+                                                    </div>
+                                                    <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
+                                                        Find <code className="bg-gray-100 dark:bg-white/10 px-1.5 py-0.5 rounded text-xs font-mono">; pull back filament to AMS</code> near line 65.
+                                                        Delete the block shown on the right.
+                                                    </p>
+                                                </div>
+                                                <div className="flex-1 bg-[#1D1D1F] rounded-xl p-5 border border-white/10 flex items-center">
+                                                    <pre className="font-mono text-[10px] text-red-400/60 line-through opacity-80 leading-relaxed w-full">
+                                                        {`; pull back filament to AMS
 M620 S255
 G1 X181 F12000
 T255
 G1 X0 F18000
-G1 X-13.0 F3000
-G1 X0 F18000 ; wipe
+...
 M621 S255`}
-                                    </pre>
+                                                    </pre>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </section>
 
-                            <div className="p-4 rounded-xl bg-orange-50 dark:bg-orange-900/10 border border-orange-100 dark:border-orange-900/20 text-sm text-orange-800 dark:text-orange-200">
-                                <strong>Note:</strong> Since we removed the initial heating command in Step 2, ensure you manually load the first filament before starting the print. The printer will heat up during calibration.
-                            </div>
+                            {/* Pro Tip Box */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                className="p-8 rounded-3xl bg-orange-50/50 dark:bg-orange-900/10 border border-orange-200/50 dark:border-orange-900/20 backdrop-blur-md"
+                            >
+                                <h4 className="flex items-center gap-3 font-bold text-orange-900 dark:text-orange-100 mb-3">
+                                    <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+                                    Important Note
+                                </h4>
+                                <p className="text-orange-800/80 dark:text-orange-200/80 text-sm leading-relaxed">
+                                    Since we removed the initial heating command in Step 2 to bypass the AMS load check, you must <strong>manually load the first filament</strong> before starting your print. The printer will heat up and handle the rest correctly during calibration.
+                                </p>
+                            </motion.div>
 
                         </div>
                     </motion.div>
                 )}
+            </AnimatePresence>
 
-                {/* Mobile Settings Overlay */}
+
+            {/* Floating Dock (Optimized) */}
+            <nav className="md:hidden fixed bottom-8 left-1/2 -translate-x-1/2 w-[auto] min-w-[320px] bg-white/60 dark:bg-[#1c1c1e]/60 backdrop-blur-md border border-white/20 dark:border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-[2.5rem] flex items-center justify-between px-2 pl-6 pr-6 py-2 z-50">
+                <button
+                    onClick={() => setShowGuide(true)}
+                    className="group flex flex-col items-center justify-center w-14 h-14 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-all text-gray-500 dark:text-gray-400"
+                >
+                    <BookOpen size={24} className="group-active:scale-90 transition-transform" />
+                </button>
+
+                <div className="relative -top-1 mx-4">
+                    <button
+                        onClick={handleNewProject}
+                        className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-xl shadow-blue-500/40 hover:scale-105 active:scale-95 transition-all border-[4px] border-white/50 dark:border-[#2C2C2E]/50 backdrop-blur-md"
+                    >
+                        <Plus size={28} className="stroke-[3]" />
+                    </button>
+                </div>
+
+                <button
+                    onClick={() => setShowMobileSettings(true)}
+                    className="group flex flex-col items-center justify-center w-14 h-14 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-all text-gray-500 dark:text-gray-400"
+                >
+                    <Settings size={24} className="group-active:scale-90 transition-transform" />
+                </button>
+            </nav>
+
+            {/* Mobile Settings Overlay */}
+            <AnimatePresence>
                 {showMobileSettings && (
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -272,34 +367,6 @@ M621 S255`}
                     </motion.div>
                 )}
             </AnimatePresence>
-
-
-            {/* Floating Dock (Optimized) */}
-            <nav className="md:hidden fixed bottom-8 left-1/2 -translate-x-1/2 w-[auto] min-w-[320px] bg-white/60 dark:bg-[#1c1c1e]/60 backdrop-blur-md border border-white/20 dark:border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-[2.5rem] flex items-center justify-between px-2 pl-6 pr-6 py-2 z-50">
-                <button
-                    onClick={() => setShowGuide(true)}
-                    className="group flex flex-col items-center justify-center w-14 h-14 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-all text-gray-500 dark:text-gray-400"
-                >
-                    <BookOpen size={24} className="group-active:scale-90 transition-transform" />
-                </button>
-
-                <div className="relative -top-1 mx-4">
-                    <button
-                        onClick={handleNewProject}
-                        className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-xl shadow-blue-500/40 hover:scale-105 active:scale-95 transition-all border-[4px] border-white/50 dark:border-[#2C2C2E]/50 backdrop-blur-md"
-                    >
-                        <Plus size={28} className="stroke-[3]" />
-                    </button>
-                </div>
-
-                <button
-                    onClick={() => setShowMobileSettings(true)}
-                    className="group flex flex-col items-center justify-center w-14 h-14 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-all text-gray-500 dark:text-gray-400"
-                >
-                    <Settings size={24} className="group-active:scale-90 transition-transform" />
-                </button>
-            </nav>
         </>
     );
 };
-
