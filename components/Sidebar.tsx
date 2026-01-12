@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { FolderOpen, Clock, FileText, Settings, Plus, RotateCcw } from 'lucide-react';
+import { FolderOpen, Clock, FileText, Settings, Plus, RotateCcw, X, Moon, Sun } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Shared type for History items
 interface HistoryItem {
@@ -12,6 +13,8 @@ interface HistoryItem {
 
 export const Sidebar = () => {
     const [history, setHistory] = useState<HistoryItem[]>([]);
+    const [showMobileHistory, setShowMobileHistory] = useState(false);
+    const [showMobileSettings, setShowMobileSettings] = useState(false);
 
     useEffect(() => {
         // Load history on mount
@@ -94,20 +97,106 @@ export const Sidebar = () => {
                 </div>
             </aside>
 
-            {/* Mobile Bottom Nav */}
-            <nav className="md:hidden fixed bottom-0 left-0 w-full bg-white/80 dark:bg-[#2C2C2E]/80 backdrop-blur-lg border-t border-gray-200 dark:border-white/5 flex justify-around p-4 z-50 safe-area-bottom pb-8">
-                <div className="flex flex-col items-center gap-1 text-blue-500">
-                    <Clock size={24} />
-                    <span className="text-[10px] font-medium">Recent</span>
+
+            {/* Mobile Overlays */}
+            <AnimatePresence>
+                {showMobileHistory && (
+                    <motion.div
+                        initial={{ opacity: 0, y: "100%" }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: "100%" }}
+                        className="md:hidden fixed inset-0 z-40 bg-white dark:bg-[#1c1c1e] p-6 pt-12 overflow-y-auto"
+                    >
+                        <div className="flex items-center justify-between mb-8">
+                            <h2 className="text-2xl font-bold">Recent Files</h2>
+                            <button onClick={() => setShowMobileHistory(false)} className="p-2 bg-gray-100 dark:bg-white/10 rounded-full">
+                                <X size={24} />
+                            </button>
+                        </div>
+                        <div className="space-y-2">
+                            {history.length === 0 ? (
+                                <p className="text-gray-400 text-center py-10">No history yet.</p>
+                            ) : (
+                                history.map((item, i) => (
+                                    <div key={i} className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-white/5 rounded-2xl">
+                                        <Clock className="text-blue-500" />
+                                        <div>
+                                            <div className="font-semibold">{item.filename}</div>
+                                            <div className="text-xs text-gray-400">{new Date(item.date).toLocaleDateString()}</div>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                            {history.length > 0 && (
+                                <button onClick={clearHistory} className="w-full mt-8 py-3 text-red-500 font-medium bg-red-50 dark:bg-red-900/10 rounded-xl">
+                                    Clear History
+                                </button>
+                            )}
+                        </div>
+                    </motion.div>
+                )}
+
+                {showMobileSettings && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        className="md:hidden fixed inset-0 z-40 flex items-center justify-center bg-black/50 backdrop-blur-sm p-6"
+                        onClick={() => setShowMobileSettings(false)}
+                    >
+                        <div className="bg-white dark:bg-[#1c1c1e] w-full max-w-sm rounded-[2rem] p-6 shadow-2xl" onClick={e => e.stopPropagation()}>
+                            <h2 className="text-xl font-bold mb-6 text-center">Settings</h2>
+
+                            <div className="space-y-4">
+                                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-2xl">
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-lg"><Moon size={18} /></div>
+                                        <span className="font-medium">Dark Mode</span>
+                                    </div>
+                                    <span className="text-xs text-gray-400">System</span>
+                                </div>
+                                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-2xl">
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-purple-100 dark:bg-purple-900/30 text-purple-600 rounded-lg"><Settings size={18} /></div>
+                                        <span className="font-medium">Version</span>
+                                    </div>
+                                    <span className="text-xs text-gray-400">v1.1.0</span>
+                                </div>
+                            </div>
+
+                            <button onClick={() => setShowMobileSettings(false)} className="w-full mt-6 py-3 bg-blue-500 text-white rounded-xl font-medium">
+                                Close
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+
+            {/* "iOS 26" Floating Dock */}
+            <nav className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[85%] max-w-[340px] bg-white/70 dark:bg-[#1c1c1e]/70 backdrop-blur-2xl border border-white/40 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-[2.5rem] flex justify-between items-center px-6 py-3 z-50 transition-all duration-300">
+                <button
+                    onClick={() => setShowMobileHistory(true)}
+                    className="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-500 active:scale-95 transition-all w-16"
+                >
+                    <Clock size={22} className={showMobileHistory ? "text-blue-500 fill-current/10" : ""} />
+                </button>
+
+                <div className="relative -top-6">
+                    <button
+                        onClick={() => window.location.reload()}
+                        className="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-blue-500/30 hover:scale-105 active:scale-95 transition-all border-4 border-white dark:border-[#2C2C2E]"
+                    >
+                        <Plus size={26} className="stroke-[3]" />
+                    </button>
                 </div>
-                <div className="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-500">
-                    <Plus size={24} />
-                    <span className="text-[10px] font-medium">New</span>
-                </div>
-                <div className="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-500">
-                    <Settings size={24} />
-                    <span className="text-[10px] font-medium">Settings</span>
-                </div>
+
+                <button
+                    onClick={() => setShowMobileSettings(true)}
+                    className="flex flex-col items-center gap-1 text-gray-400 hover:text-blue-500 active:scale-95 transition-all w-16"
+                >
+                    <Settings size={22} className={showMobileSettings ? "text-blue-500 fill-current/10" : ""} />
+                </button>
             </nav>
         </>
     );
