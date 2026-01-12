@@ -167,6 +167,24 @@ export default function Home() {
                                 delay={0.2}
                             />
                         </div>
+
+                        {/* Footer / Disclaimer */}
+                        <div className="mt-16 pt-8 border-t border-gray-200/50 dark:border-white/5 text-center px-4 mb-8">
+                            <h4 className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">
+                                {t.home.about}
+                            </h4>
+                            <p className="text-[11px] text-gray-400 dark:text-gray-600 max-w-lg mx-auto leading-relaxed">
+                                {t.home.disclaimerText}
+                            </p>
+                            <a
+                                href="https://github.com/nogitaldistalgico/Tills-MMS"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-block mt-3 text-[11px] font-medium text-blue-500/80 hover:text-blue-600 transition-colors"
+                            >
+                                {t.home.githubContact}
+                            </a>
+                        </div>
                     </motion.div>
                 ) : (
                     <div className="space-y-2">
@@ -204,7 +222,7 @@ export default function Home() {
                 )}
             </div>
 
-            {/* Floating Action Button (Scroll Top) - Moved up to avoid dock */}
+            {/* Floating Action Button (Scroll Top) - Updated Transparency */}
             <AnimatePresence>
                 {job && (
                     <motion.button
@@ -212,7 +230,7 @@ export default function Home() {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0 }}
                         onClick={scrollToTop}
-                        className="fixed bottom-36 right-6 w-12 h-12 bg-white dark:bg-gray-700 shadow-xl rounded-full flex items-center justify-center text-gray-500 hover:text-blue-500 hover:scale-110 transition-all z-40 border border-gray-100 dark:border-white/10"
+                        className="fixed bottom-36 right-6 w-12 h-12 bg-white/40 dark:bg-[#1c1c1e]/40 backdrop-blur-md shadow-xl rounded-full flex items-center justify-center text-gray-500 hover:text-blue-500 hover:scale-110 transition-all z-40 border border-gray-100 dark:border-white/10"
                     >
                         <ArrowUp size={20} />
                     </motion.button>

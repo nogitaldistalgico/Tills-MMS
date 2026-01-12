@@ -24,7 +24,7 @@ export const TaskRow: React.FC<TaskRowProps> = ({ task, onToggle, index }) => {
             className={cn(
                 "group relative flex items-center p-4 mb-2 rounded-xl transition-all duration-300",
                 task.is_completed
-                    ? "bg-gray-100/50 dark:bg-white/5 opacity-60 dark:border-transparent"
+                    ? "bg-gray-100/50 dark:bg-transparent opacity-60 dark:opacity-40 border border-transparent"
                     : "bg-white dark:bg-[#2C2C2E] shadow-sm hover:shadow-md border border-gray-100 dark:border-white/5"
             )}
         >

@@ -56,7 +56,10 @@ export const translations = {
             analyzing: "Analyzing...",
             orClick: "or click to browse",
             supports: "Supports .gcode and .3mf",
-            errorParse: "Failed to parse file. Please try again."
+            errorParse: "Failed to parse file. Please try again.",
+            about: "About & Disclaimer",
+            disclaimerText: "This is a hobby project. I take no responsibility or liability for any damage caused by modified G-code. Use at your own risk. For private use only.",
+            githubContact: "Feedback or Issues? Contact me on GitHub."
         },
         // TaskRow
         task: {
@@ -127,7 +130,10 @@ export const translations = {
             analyzing: "Analysiere...",
             orClick: "oder klicken zum Auswählen",
             supports: "Unterstützt .gcode und .3mf",
-            errorParse: "Fehler beim Lesen der Datei. Bitte versuche es erneut."
+            errorParse: "Fehler beim Lesen der Datei. Bitte versuche es erneut.",
+            about: "Über & Haftungsausschluss",
+            disclaimerText: "Dies ist ein Hobbyprojekt. Ich übernehme keine Verantwortung oder Haftung für Schäden, die durch modifizierten G-Code entstehen. Benutzung auf eigene Gefahr. Nur für den privaten Gebrauch.",
+            githubContact: "Feedback oder Fehler? Kontaktier mich auf GitHub."
         },
         // TaskRow
         task: {
