@@ -127,7 +127,7 @@ M109 S[new_filament_temp]  ; Set temp for NEW filament
                             {/* Intro */}
                             <section>
                                 <p className="text-gray-600 dark:text-gray-300 leading-relaxed font-medium">
-                                    To enable manual multicolor printing on your Bambu Lab printer without AMS, you need to modify three G-code sections in your "Printer Settings".
+                                    To enable manual multicolor printing on your Bambu Lab A1 Series printer without AMS, you need to modify three G-code sections in your Printer Preset. You can save the changes to a new preset for this Purpose only.
                                 </p>
                             </section>
 
