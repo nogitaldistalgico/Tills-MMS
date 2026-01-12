@@ -46,13 +46,11 @@ export const Sidebar = () => {
     };
 
     // G-Code Blocks
-    const gcodeBlock1 = `; TOOL CHANGE G-CODE (Generic)
-M600 ; Filament change
-`;
-
-    const gcodeBlock2 = `; TOOL CHANGE G-CODE (Bambu/Prusa)
-M0 ; Pause for user
-`;
+    // G-Code Constants
+    const changeFilamentBlock = `; --- Manual Color Change Start ---
+M400 U1             ; Pause printer (parks at waste chute)
+M109 S[new_filament_temp]  ; Set temp for NEW filament
+; --- Manual Color Change End ---`;
 
     return (
         <>
