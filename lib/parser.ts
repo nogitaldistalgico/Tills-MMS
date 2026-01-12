@@ -110,7 +110,7 @@ export const parseGcodeContent = (filename: string, content: string): PrintJob =
                     if (is_pseudo_start) {
                         last_tool = tool_idx;
                         is_pseudo_start = false;
-                        continue;
+                        return;
                     }
 
                     const task_type = "swap";
