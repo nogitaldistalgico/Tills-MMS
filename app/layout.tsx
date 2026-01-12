@@ -34,7 +34,9 @@ export default function RootLayout({
             <body className={cn(inter.variable, "font-sans antialiased text-gray-900 dark:text-white bg-bg-light dark:bg-bg-dark h-[100dvh] overflow-hidden flex flex-col md:flex-row safe-area-inset-bottom")}>
                 <Sidebar />
                 <main className="flex-1 md:ml-[250px] h-full overflow-y-auto relative pb-32 md:pb-0">
-                    {children}
+                    <LanguageProvider>
+                        {children}
+                    </LanguageProvider>
                 </main>
             </body>
         </html>
