@@ -18,12 +18,17 @@ export default function Home() {
     const [isScrolled, setIsScrolled] = useState(false);
 
     useEffect(() => {
+        const mainElement = document.querySelector('main');
+        if (!mainElement) return;
+
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 120);
+            setIsScrolled(mainElement.scrollTop > 50);
         };
-        window.addEventListener('scroll', handleScroll);
+
+        mainElement.addEventListener('scroll', handleScroll);
         handleScroll(); // Check initial state
-        return () => window.removeEventListener('scroll', handleScroll);
+
+        return () => mainElement.removeEventListener('scroll', handleScroll);
     }, []);
 
     // Persistence Loading
