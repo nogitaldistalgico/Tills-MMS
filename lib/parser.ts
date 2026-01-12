@@ -105,7 +105,15 @@ export const parseGcodeContent = (filename: string, content: string): PrintJob =
                 const tool_idx = parseInt(toolPart);
 
                 if (tool_idx !== last_tool) {
-                    const task_type = is_pseudo_start ? "start" : "swap";
+                    // Skip the very first "start" event (user request: remove first transition)
+                    // But still update the last_tool so subsequent swaps are detected correctly.
+                    if (is_pseudo_start) {
+                        last_tool = tool_idx;
+                        is_pseudo_start = false;
+                        continue;
+                    }
+
+                    const task_type = "swap";
 
                     // Provide fallback if tool_idx exceeds known filaments
                     const fil = filaments[tool_idx] || {
@@ -124,7 +132,7 @@ export const parseGcodeContent = (filename: string, content: string): PrintJob =
                         description: `Slot ${tool_idx + 1}`,
                         color: fil.color,
                         z_height: current_z,
-                        layer_num: current_layer, // Added field
+                        layer_num: current_layer,
                         progress_percent: parseFloat(progress.toFixed(1)),
                         is_completed: false
                     };
@@ -132,7 +140,6 @@ export const parseGcodeContent = (filename: string, content: string): PrintJob =
                     tasks.push(task);
 
                     last_tool = tool_idx;
-                    is_pseudo_start = false;
                 }
             }
         }
