@@ -98,11 +98,11 @@ export default function Home() {
     const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
 
     return (
-        <div className="min-h-full max-w-5xl mx-auto p-6 md:p-12 pb-40">
+        <div className="min-h-full max-w-5xl mx-auto p-6 md:p-8 md:px-12 pb-40">
             {/* Header */}
-            <header className="flex items-center justify-between mb-16 gap-4">
+            <header className="flex items-center justify-between mb-8 gap-4">
                 <div className="space-y-2">
-                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-600 to-gray-400 dark:from-white dark:via-gray-100 dark:to-gray-500">
+                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-600 to-gray-400 dark:from-white dark:via-gray-200 dark:to-gray-400">
                         {job ? job.filename.replace(/\.gcode\.3mf$/i, '').replace(/\.gcode$/i, '').replace(/\.3mf$/i, '') : t.home.dashboard}
                     </h1>
                     <p className="text-base md:text-lg text-gray-500 dark:text-gray-400 font-medium max-w-2xl leading-relaxed">
@@ -127,7 +127,13 @@ export default function Home() {
 
             {/* Progress Bar (Sticky) */}
             {job && (
-                <div className="sticky top-0 z-30 bg-bg-light/80 dark:bg-bg-dark/80 backdrop-blur-xl py-6 mb-12 -mx-6 px-6 md:-mx-12 md:px-12 border-b border-gray-200/20 dark:border-white/5 transition-all">
+                <div className="sticky top-0 z-30 bg-bg-light/80 dark:bg-bg-dark/80 backdrop-blur-xl py-4 mb-6 -mx-6 px-6 md:-mx-12 md:px-12 border-b border-gray-200/20 dark:border-white/5 transition-all">
+                    <div className="flex items-center justify-between mb-2 px-1">
+                        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 truncate max-w-[80%]">
+                            {job.filename.replace(/\.gcode\.3mf$/i, '').replace(/\.gcode$/i, '').replace(/\.3mf$/i, '')}
+                        </span>
+                        <span className="text-xs text-gray-400 font-mono">{Math.round(progress)}%</span>
+                    </div>
                     <div className="h-2.5 bg-gray-100 dark:bg-white/5 rounded-full overflow-hidden shadow-inner">
                         <motion.div
                             className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 shadow-[0_0_20px_rgba(59,130,246,0.5)]"
@@ -238,7 +244,7 @@ export default function Home() {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0 }}
                         onClick={scrollToTop}
-                        className="fixed bottom-32 right-6 w-12 h-12 bg-white/20 dark:bg-black/20 backdrop-blur-2xl shadow-xl rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white hover:scale-110 transition-all z-40 border border-white/20 dark:border-white/10"
+                        className="fixed bottom-32 right-6 w-12 h-12 bg-white/10 dark:bg-black/10 backdrop-blur-2xl shadow-xl rounded-full flex items-center justify-center text-gray-500 hover:text-blue-500 hover:scale-110 transition-all z-40 border border-white/20 dark:border-white/10"
                     >
                         <ArrowUp size={20} />
                     </motion.button>
